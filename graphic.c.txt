@@ -1,0 +1,3391 @@
+#include<stdio.h>
+#include<graphics.h>
+#include<conio.h>
+#include<stdlib.h>
+#include<dos.h>
+#include<string.h>
+void TABLE(int ,int ,int ,int ,int);
+void background(int,int,int,int,int);
+void MENU();
+void arrow();
+void SHOW_ARROW();
+void INSERT_RECORD();
+    void INSERT_MENU();
+void EDIT_RECORD();
+    void edit_command(int *);
+    void EDIT_MENU();
+    void EDIT_ID();
+    void EDIT_NAME();
+    void STAFF_DE();
+    void show_arrow();
+    void ED_ARR();
+    void edit_menu1();
+    void ed_arrow();
+    void show_ed_arrow();
+    void edit_by_id();
+    void edit_by_name();
+    void edit_by_sex();
+    void edit_by_DOB();
+    void edit_by_grade();
+    void edit_by_salary();
+    void view_info();
+    void id_edit_menu();
+    void edit_cmd(int *);
+void DELET_RECORD();
+    void delet_command(int *);
+    void delet_menu();
+    void delet_arrow();
+    void delet_all();
+    void delet_one();
+    void delet_record();
+    void delet(int *);
+    void deleting();
+    void delet_all_score();
+void SEARCH_RECORD();
+    void search_command(int *);
+    void SEARCH_MENU();
+    void arrow1();
+    void show_arrow1();
+    void ID_SEARCH();
+    void NAME_SEARCH();
+    void STAFF_DETAIL();
+    void ID_SEARCH_BOX();
+    void search_option();
+void SHOW_RECORD();
+    void BOX_SHOWRECORD();
+    void SORT_RECORD();
+void GROUP_MEMBER();
+    void insert_stu();
+    void show_stu();
+    void show_all_stu();
+    void stu_menu();
+    void get_background();
+    void show_background();
+    void insert_menu();
+    void edit_stu_record();
+    void insert_all_stu();
+    void insert_one_stu();
+    void get_background1();
+    void show_background1();
+    void insert_stu_menu();
+    void input_one_stu(int *);
+    void find_result();
+    void show_stu_score();
+    void BOX_STU_RECORD();
+    void search_stu_menu();
+    void get_background2();
+    void search_stu_id();
+    void search_stu_name();
+    void search_stu_rank();
+    void search_stu_sex();
+    void search_stu_result();
+    void show_stu_record();
+    void show_stu_record8(int *);
+    void stu_command(int *);
+    void stu_cmd2(int *);
+    void stu_cmd3(int *);
+void BOX_STU_SHOW();
+void LOAD();
+void thank();
+void exit_menu();
+void save();
+void open();
+void password();
+void save_password();
+void open_password();
+void save_password();
+void check_password();
+void command();
+void EXIT();
+void graphic();
+void write_stu_detail();
+void read_stu_detail();
+int initmouse();
+void showmouseptr();
+union REGS i, o;
+int x_pos,y_pos;
+typedef struct Detail
+{
+    int id;
+    char name[20];
+    char sex[10];
+    int day;
+    char month[15];
+    int year;
+    char grade[30];
+    float salary;
+};
+typedef struct STU_RECORD
+{
+    float math;
+    float chemical;
+    float physic;
+    float english;
+    float khmer;
+    float philosophy;
+    float biology;
+    float earth;
+    float history;
+    float geography;
+    float average;
+    int rank;
+    char result[15];
+    float total;
+};
+void save_number8_stu();
+Detail de[50];
+STU_RECORD stu[50];
+int a=1,number=0,b,r,s=0,e=0,h=0,r1[50];
+char c,ch,g,p_word[20],rp_word[20],c_word[20];
+FILE *fp;
+void main()
+{
+    clrscr();
+    int i;
+    check_password();
+    open(); read_stu_detail();
+    LOAD(); getch();
+    clrscr(); MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,6); cprintf("  %c INSERT STAFF DETAIL ",16);
+    textbackground(0);
+    while(1)
+    {
+        showmouseptr();
+        c=getch(); textbackground(0);
+        clrscr();
+        if(c==27) password();
+        if(c==9) command();
+        arrow();
+        MENU();
+        SHOW_ARROW();
+        if(a==1&&c==13) INSERT_RECORD();
+        if(a==2&&c==13) EDIT_RECORD();
+        if(a==3&&c==13) DELET_RECORD();
+        if(a==4&&c==13) SEARCH_RECORD();
+        if(a==5&&c==13) SHOW_RECORD();
+        if(a==6&&c==13) GROUP_MEMBER();
+        if(a==7&&c==13) EXIT();
+    }
+}
+void init_background()
+{
+    int i,j;
+    for(i=30;i<=50;i++)
+        if(x_pos==i&&y_pos==6)
+        {
+            gotoxy(30,6); textbackground(LIGHTGREEN);  cprintf("  %c INSERT STAFF DETAIL ",16);textbackground(0);
+        }
+}
+int initmouse()
+{
+     i.x.ax = 0;
+     int86(0X33,&i,&o);
+     return ( o.x.ax );
+}
+
+void showmouseptr()
+{
+    i.x.ax = 1;
+    int86(0X33,&i,&o);
+    x_pos=o.x.cx;
+    y_pos=o.x.dx;
+}
+void graphic()
+{
+    int gd=DETECT,gm;
+    initgraph(&gd,&gm,"C:\\TC\\BGI");
+    setgraphmode(1);
+    moveto(1,150);
+    settextstyle(3,0,5);
+    outtext("THANK FOR USING MY PROGRAM");
+    delay(3000);
+    closegraph();
+    exit(0);
+}
+void EXIT()
+{
+    clrscr();save();save_number8_stu();write_stu_detail();LOAD(); graphic();
+}
+void command()
+{
+    clrscr();
+    char cmd[15];
+    _setcursortype(_NORMALCURSOR);
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10); printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("Command : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(37,12); fflush(stdin); gets(cmd); strlwr(cmd); _setcursortype(0);
+    if(strcmp(cmd,"insert")==0) INSERT_RECORD();
+    if(strcmp(cmd,"edit")==0) EDIT_RECORD();
+    if(strcmp(cmd,"delet")==0) DELET_RECORD();
+    if(strcmp(cmd,"show")==0) SHOW_RECORD();
+    if(strcmp(cmd,"credit")==0) GROUP_MEMBER();
+    if(strcmp(cmd,"exit")==0) exit(0);
+    if(strcmp(cmd,"password")==0) password();
+    if(strcmp(cmd,"search")==0) SEARCH_RECORD();
+    if(strcmp(cmd,"sexit")==0) EXIT();
+    clrscr();
+}
+void check_password()
+{
+    clrscr();
+    int i=0,j;
+    char get,check_pword[20];
+    open_password();
+    if(p_word[0]=='\0') return;
+    TABLE(20,65,10,16,WHITE);
+    gotoxy(25,13); printf("PASSWORD : "); background(37,60,13,13,LIGHTGREEN);
+    gotoxy(40,13);
+    while(1)
+    {
+        if(i>20) break;
+        _setcursortype(_NORMALCURSOR);
+        fflush(stdin); get=getch();
+        if(get==27)
+        {       check_pword[i]='\0';
+            gotoxy(40,13);printf("%s",check_pword);getch(); gotoxy(40,13);
+            for(j=0;j<strlen(check_pword);j++)
+                printf("*");
+            continue;
+        }
+        if(i==0&&get==13) continue;
+        if(get==13) {p_word[i]='\0';break;}
+        if(get==8)
+        {
+            if(i==0){ printf(""); continue;}
+            if(i>0)
+            {
+                gotoxy(39+i,13); printf(" ");
+                gotoxy(39+i,13);
+                i--; continue;
+            }
+        }
+        check_pword[i]=get;
+        printf("*");
+        i++;
+    }
+    check_pword[i]='\0';
+    _setcursortype(0);
+    if(strcmp(check_pword,p_word)==0) { clrscr();return;}
+    if(strcmp(check_pword,"password=tmpuser")==0) { clrscr(); return;}
+    gotoxy(25,18); printf("Incorrect password. Try again later.");getch();exit(0);
+}
+void password()
+{
+    clrscr();
+    int i=0,j;
+    char get;
+    if(p_word[0]!='\0')
+    {
+        gotoxy(20,13); printf("CURRENT PASSWORD : ");background(39,60,13,13,LIGHTGREEN);
+        gotoxy(40,13);
+        while(1)
+        {
+            if(i>15) break;
+            _setcursortype(_NORMALCURSOR);
+            fflush(stdin); get=getch();
+            if(get==27)
+            {
+                c_word[i]='\0';
+                gotoxy(40,13);printf("%s",c_word);getch(); gotoxy(40,13);
+                for(j=0;j<strlen(c_word);j++)
+                printf("*");
+                continue;
+            }
+            if(get==13) {c_word[i]='\0';break;}
+            if(get==8)
+            {
+                if(i==0){ printf(""); continue;}
+                if(i>0)
+                {
+                    gotoxy(39+i,13); printf(" ");
+                    gotoxy(39+i,13);
+                    i--; continue;
+                }
+            }
+            c_word[i]=get;
+            printf("*");
+            i++;
+        }
+    }
+    if(strcmp(c_word,p_word)!=0)
+    {
+        clrscr();gotoxy(30,13);_setcursortype(0); printf("Password did not match");
+        getch(); clrscr();return;
+    }
+    AGAIN:
+    clrscr();
+    TABLE(20,60,8,14,WHITE);
+    gotoxy(25,10); printf("PASSWORD   : "); background(38,58,10,10,LIGHTGREEN);
+    gotoxy(25,12); printf("REPASSWORD : "); background(38,58,12,12,LIGHTGREEN);
+    gotoxy(40,10);
+    i=0;
+    while(1)
+    {
+        if(i>15) break;
+        _setcursortype(_NORMALCURSOR);
+        fflush(stdin); get=getch();
+        if(get==13) {p_word[i]='\0';break;}
+        if(get==8)
+        {
+            if(i==0){ printf(""); continue;}
+            if(i>0)
+            {
+                gotoxy(39+i,10); printf(" ");
+                gotoxy(39+i,10);
+                i--; continue;
+            }
+        }
+        p_word[i]=get;
+        printf("*");
+        i++;
+    }
+    i=0;
+    gotoxy(40,12);
+    while(1)
+    {
+        if(i>15) break;
+        fflush(stdin); get=getch();
+        if(get==13) {rp_word[i]='\0'; break;}
+        if(get==8)
+        {
+            if(i==0){ printf(""); continue;}
+            if(i>0)
+            {
+                gotoxy(39+i,12); printf(" ");
+                gotoxy(39+i,12);
+                i--; continue;
+            }
+        }
+        rp_word[i]=get;
+        printf("*");
+        i++;
+    }
+    _setcursortype(0);
+    if(strcmp(p_word,rp_word)==0) save_password();
+    else { gotoxy(28,16); printf("password did not match");getch();goto AGAIN;}
+    getch();clrscr();
+}
+void write_stu_detail()
+{
+    FILE *fp1;
+    int i;
+    fp1=fopen("stu_record.bin","wb");
+    for(i=0;i<number;i++)
+    {
+        fwrite(&stu[i],sizeof(STU_RECORD),1,fp1);
+    }
+    fclose(fp);
+}
+void read_stu_detail()
+{
+    FILE *fp1;
+    int i;
+    fp1=fopen("stu_record.bin","rb");
+    for(i=0;i<number;i++)
+    {
+        fseek(fp1,sizeof(STU_RECORD)*i,0);
+        fread(&stu[i],sizeof(STU_RECORD),1,fp1);
+    }
+    fclose(fp1);
+}
+void save_password()
+{
+    FILE *fp;
+    fp=fopen("password.bin","wb");
+    fwrite(&p_word,sizeof(char),20,fp);
+    fclose(fp);
+}
+void open_password()
+{
+    FILE *fp;
+    fp=fopen("password.bin","rb");
+    fread(&p_word,sizeof(char),20,fp);
+    fclose(fp);
+}
+void open()
+{
+    FILE *fp3;
+    int i;
+    fp=fopen("Employees.bin","rb");
+    fp3=fopen("number.bin","rb");
+    fread(&number,sizeof(int),1,fp3);
+    if(fp==NULL)
+    {
+        printf("");
+    }
+    for(i=0;i<number;i++)
+    {
+        fseek(fp,sizeof(Detail)*i,0);
+        fread(&de[i],sizeof(Detail),1,fp);
+    }
+    fclose(fp);
+    fclose(fp3);
+}
+void save()
+{
+    int i;
+    fp=fopen("Employees.bin","wb");
+    for(i=0;i<number;i++)
+    {
+        fwrite(&de[i],sizeof(Detail),1,fp);
+    }
+        fclose(fp);
+
+}
+void save_number8_stu()
+{
+    FILE *fp3;
+    fp3=fopen("number.bin","wb");
+    fwrite(&number,sizeof(int),1,fp3);
+    fclose(fp3);
+}
+void exit_menu()
+{
+    TABLE(33,45,2,4,LIGHTGREEN);
+    gotoxy(35,3); printf("EXIT MENU");
+    textcolor(WHITE);
+}
+void thank()
+{
+    int i=1;
+    while(!kbhit())
+    {
+            background(1,80,22,22,LIGHTGREEN);
+            gotoxy(i,22); printf("THANK YOU");
+            delay(100);
+            gotoxy(i,22); clreol();
+            i++;
+            if(i==73) i=1;
+    }
+}
+void TABLE(int a1,int a2,int b1,int b2,int color)
+{
+    int i;
+    textcolor(color);
+    for(i=a1+1;i<a2;i++)
+    {
+        gotoxy(i,b1); cprintf("%c",205);
+        gotoxy(i,b2); cprintf("%c",205);
+    }
+    for(i=b1+1;i<b2;i++)
+    {
+        gotoxy(a1,i); cprintf("%c",186);
+        gotoxy(a2,i); cprintf("%c",186);
+    }
+    gotoxy(a1,b1); cprintf("%c",201);
+    gotoxy(a2,b1); cprintf("%c",187);
+    gotoxy(a1,b2); cprintf("%c",200);
+    gotoxy(a2,b2); cprintf("%c",188);
+}
+void MENU()
+{
+    _setcursortype(0);
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,44,1,3,WHITE);
+    gotoxy(35,2); cprintf("MAIN MENU");
+    gotoxy(30,6); cprintf("%c INSERT STAFF DETAIL",16);
+    gotoxy(30,8); cprintf("%c EDIT DETAIL",16);
+    gotoxy(30,10); cprintf("%c DELET DETAIL",16);
+    gotoxy(30,12); cprintf("%c SEARCH DETAIL",16);
+    gotoxy(30,14); cprintf("%c SHOW DETAIL",16);
+    gotoxy(30,16); cprintf("%c STUDENT CREDIT",16);
+    gotoxy(30,18); cprintf("%c EXIT",16);
+    gotoxy(10,22); cprintf("%c USE ARROW KEY [   ] TO MOVE",16);
+    gotoxy(10,24); cprintf("%c PRESS [         ] TO SELECT",16);
+    gotoxy(42,22); printf("%c PESSS [   ] TO SET PASSWORD",16);
+    gotoxy(42,24); printf("%c PRESS [   ] TO RUN COMMAND",16);
+    textcolor(BLUE);gotoxy(51,22); cprintf("ESC");
+    gotoxy(27,22); cprintf("%c %c",24,25);
+    gotoxy(19,24); cprintf("ENTER KEY");
+    gotoxy(51,24); cprintf("TAB");
+    textcolor(WHITE);
+}
+void arrow()
+{
+    if(c==72) a--;
+    if(c==80) a++;
+}
+void SHOW_ARROW()
+{
+    if(a<=0) a=7;
+    if(a>=8) a=1;
+    switch(a)
+    {
+        case 1 : gotoxy(30,6); textbackground(LIGHTGREEN);  cprintf("  %c INSERT STAFF DETAIL ",16);textbackground(0); break;
+        case 2 : gotoxy(30,8); textbackground(LIGHTGREEN);  cprintf("  %c EDIT DETAIL         ",16);  textbackground(0); break;
+        case 3 : gotoxy(30,10); textbackground(LIGHTGREEN); cprintf("  %c DELET DETAIL        ",16);      textbackground(0); break;
+        case 4 : gotoxy(30,12); textbackground(LIGHTGREEN); cprintf("  %c SEAECH DETAIL       ",16);       textbackground(0); break;
+        case 5 : gotoxy(30,14); textbackground(LIGHTGREEN); cprintf("  %c SHOW DETAIL         ",16);       textbackground(0); break;
+        case 6 : gotoxy(30,16); textbackground(LIGHTGREEN); cprintf("  %c STUDENT CREDIT      ",16);textbackground(0); break;
+        case 7 : gotoxy(30,18); textbackground(LIGHTGREEN); cprintf("  %c EXIT                ",16);              textbackground(0); break;
+    }
+}
+
+//START OF GROUP MEMBER;
+void GROUP_MEMBER()
+{
+    clrscr();
+    s=1;
+    int de_break=0;
+    TABLE(10,70,2,20,WHITE);
+    TABLE(32,48,1,3,WHITE);
+    gotoxy(33,2); cprintf("STUDENT RECORD");
+    stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(28,6); cprintf(" %c INSERT STUDENT POINT    ",16);
+    while(1)
+    {
+
+        textbackground(0);
+        clrscr(); stu_menu(); show_background();
+        ch=getch(); clrscr();
+        if(ch==8) break;
+        if(ch==9) {stu_command(&de_break);if(de_break!=0) break; continue;}
+        stu_menu(); get_background();
+        show_background();
+        if(s==1&&ch==13) insert_stu();
+        if(s==2&&ch==13) show_stu();
+        if(s==3&&ch==13) edit_stu_record();
+        if(s==4&&ch==13) show_stu_score();
+        if(s==5&&ch==13) show_all_stu();
+        if(s==6&&ch==13) break;
+    }
+    clrscr();
+    MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,16); cprintf("  %c STUDENT CREDIT      ",16);
+    textbackground(0);
+}
+void stu_command(int *de_break)
+{
+    clrscr();
+    char stu_cmd[15];
+    _setcursortype(_NORMALCURSOR);
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10); printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(38,12); fflush(stdin); gets(stu_cmd);
+    strlwr(stu_cmd); _setcursortype(0);
+    if(strcmp(stu_cmd,"insert")==0) insert_stu();
+    if(strcmp(stu_cmd,"show")==0) show_stu();
+    if(strcmp(stu_cmd,"search")==0) edit_stu_record();
+    if(strcmp(stu_cmd,"score")==0) show_stu_score();
+    if(strcmp(stu_cmd,"detail")==0) show_all_stu();
+    if(strcmp(stu_cmd,"back")==0) *de_break=1;
+    if(strcmp(stu_cmd,"exit")==0) exit(0);
+    if(strcmp(stu_cmd,"sexit")==0) EXIT();
+    if(strcmp(stu_cmd,"password")==0) password();
+}
+void show_stu_score()
+{
+    clrscr();
+    TABLE(34,46,1,3,WHITE);
+    gotoxy(35,2); printf("SHOW SCORE");
+    if(number<=0)
+    {
+        gotoxy(15,12); printf("THERE IS NO STUDENT IN THE LIST. PRESS ANYKEY TO CONTINUE.");
+        getch(); clrscr();
+        stu_menu(); textbackground(LIGHTGREEN);
+        gotoxy(28,12); cprintf(" %c SHOW ALL STUDENT SCORE  ",16);
+        textbackground(0); return;
+    }
+    BOX_STU_RECORD();
+    clrscr();
+    stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(28,12); cprintf(" %c SHOW ALL STUDENT SCORE  ",16);
+    textbackground(0);
+}
+void edit_stu_record()  //show for stu score;
+{
+    clrscr();
+    int tmp_stu=0;
+    h=1;
+    search_stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,6); cprintf(" %c SEARCH BY ID      ",16);
+    textbackground(0);
+    while(1)
+    {
+        ch=getch(); clrscr();
+        if(ch==8) break;
+        if(ch==9)
+        {
+            stu_cmd2(&tmp_stu);
+            if(tmp_stu!=0) break;
+            search_stu_menu(); get_background2();
+            continue;
+        }
+        search_stu_menu();
+        get_background2();
+        if(h==1&&ch==13) search_stu_id();
+        if(h==2&&ch==13) search_stu_name();
+        if(h==3&&ch==13) search_stu_rank();
+        if(h==4&&ch==13) search_stu_sex();
+        if(h==5&&ch==13) search_stu_result();
+        if(h==6&&ch==13) break;
+    }
+    clrscr();  stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(28,10); cprintf(" %c SEARCH STUDENT POINT    ",16);
+    textbackground(0);
+}
+void stu_cmd2(int *tmp_stu)
+{
+    clrscr();
+    char stu_cmd[15];
+    _setcursortype(_NORMALCURSOR);
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10); printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAND :  "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(38,12); fflush(stdin); gets(stu_cmd);
+    strlwr(stu_cmd); _setcursortype(0);
+    if(strcmp(stu_cmd,"id")==0)     search_stu_id();
+    if(strcmp(stu_cmd,"name")==0)   search_stu_name();
+    if(strcmp(stu_cmd,"rank")==0)   search_stu_rank();
+    if(strcmp(stu_cmd,"sex")==0)    search_stu_sex();
+    if(strcmp(stu_cmd,"result")==0) search_stu_result();
+    if(strcmp(stu_cmd,"exit")==0)   exit(0);
+    if(strcmp(stu_cmd,"sexit")==0)  EXIT();
+    if(strcmp(stu_cmd,"back")==0)   *tmp_stu=1;
+    if(strcmp(stu_cmd,"break")==0)  *tmp_stu=1;
+    if(strcmp(stu_cmd,"password")==0) password();
+}
+void search_stu_id()
+{
+    clrscr();
+    int stu_id,i;
+    while(1)
+    {
+        clrscr();
+        TABLE(10,70,2,20,WHITE);
+        TABLE(34,45,1,3,WHITE);
+        gotoxy(35,2); printf("ID SEARCH");
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(30,12); printf("ID : ");
+        background(35,52,12,12,LIGHTGREEN);
+        textbackground(WHITE);
+        textcolor(BLACK);gotoxy(40,14); cprintf(" SEARCH ");
+        textcolor(WHITE); textbackground(0);
+        gotoxy(37,12); fflush(stdin); scanf("%d",&stu_id);
+        _setcursortype(0);
+        background(40,47,14,14,LIGHTGREEN);
+        gotoxy(41,14); printf("SEARCH"); delay(300);
+        if(stu_id<=0||stu_id>100)
+        {
+            clrscr();_setcursortype(0);
+            gotoxy(20,12); printf("Invalid ID :(. ID must between 1 to 100");
+            getch();  continue;
+        }
+        break;
+    }
+    r=-1;
+    for(i=0;i<number;i++)
+        if(stu_id==de[i].id)
+        {
+            r=i;
+            break;
+        }
+    if(r==-1){ clrscr(); gotoxy(20,12); printf("Invalid ID :(. This ID does not existed."); }
+    else {_setcursortype(0); show_stu_record();}
+    getch();clrscr(); search_stu_menu();
+    textbackground(LIGHTGREEN);_setcursortype(0);
+    gotoxy(27,6); cprintf(" %c SEARCH BY ID      ",16);
+    textbackground(0);
+}
+void search_stu_name()
+{
+    clrscr();
+    char stu_name[25];
+    int i;
+    while(1)
+    {
+        clrscr();
+        TABLE(10,70,2,20,WHITE);
+        TABLE(33,45,1,3,WHITE);
+        gotoxy(34,2); printf("NAME SEARCH");
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(25,12); printf("Name : "); background(32,55,12,12,LIGHTGREEN);
+        textbackground(WHITE);
+        textcolor(BLACK);gotoxy(40,14); cprintf(" SEARCH ");
+        textcolor(WHITE); textbackground(0);
+        gotoxy(35,12); fflush(stdin); gets(stu_name);
+        _setcursortype(0);  strupr(stu_name);
+        background(40,47,14,14,LIGHTGREEN);
+        gotoxy(41,14); printf("SEARCH"); delay(300);
+        if(strlen(stu_name)==0)
+        {
+            clrscr(); continue;
+        }
+        if(strlen(stu_name)>20)
+        {
+            clrscr();_setcursortype(0);
+            gotoxy(20,12); printf("Invalid Name :(. Name must not longer than 20 charater.");
+            getch();  continue;
+        }
+        break;
+    }
+    r=-1;
+    for(i=0;i<number;i++)
+        if(strcmp(stu_name,de[i].name)==0)
+        {
+            r=i;
+            break;
+        }
+    if(r==-1){ clrscr(); gotoxy(20,12); printf("Invalid Name :(. This Name does not existed."); }
+    else {_setcursortype(0); show_stu_record();}
+
+    getch();
+    clrscr(); search_stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf(" %c SEARCH BY NAME    ",16);
+    textbackground(0);
+}
+void search_stu_rank()
+{
+    clrscr();
+    int stu_rank,i,j=0;
+    while(1)
+    {
+        clrscr();
+        TABLE(10,70,2,20,WHITE);
+        TABLE(33,45,1,3,WHITE);
+        gotoxy(34,2); printf("RANK SEARCH");
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(28,12);printf("RANK : "); background(35,53,12,12,LIGHTGREEN);
+        textbackground(WHITE);
+        textcolor(BLACK);gotoxy(40,14); cprintf(" SEARCH ");
+        textcolor(WHITE); textbackground(0);
+        fflush(stdin);gotoxy(37,12); scanf("%d",&stu_rank);
+        _setcursortype(0);
+        background(40,47,14,14,LIGHTGREEN);
+        gotoxy(41,14); printf("SEARCH"); delay(300);
+        if(stu_rank<=0||stu_rank>100)
+        {
+            clrscr();_setcursortype(0);
+            gotoxy(20,12); printf("Invalid Rank :(. Rank must between 1 to 100");
+            getch();  continue;
+        }
+        break;
+    }
+    for(i=0;i<50;i++)
+    {
+        r1[i]=0;
+    }
+    for(i=0;i<number;i++)
+        if(stu_rank==stu[i].rank)
+        {
+            r1[j]=i;
+            j++;
+        }
+    if(j==0){ clrscr(); gotoxy(20,12); printf("Invalid Rank :(. This Rank does not existed."); }
+    else {_setcursortype(0); show_stu_record8(&j);}
+    getch();
+    clrscr(); search_stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,10); cprintf(" %c SEARCH BY RANK    ",16);
+    textbackground(0);
+}
+void show_stu_record8(int *j1)
+{
+    int i,j,k=0,i1;
+    if(*j1==1)
+    {
+        clrscr();
+        int i,j;
+        TABLE(32,48,1,3,WHITE);
+        gotoxy(33,2); printf("STUDENT RECORD");
+        gotoxy(30,5); printf("NAME    : %s",de[r1[0]].name);
+        gotoxy(30,7); printf("SEX     : %s",de[r1[0]].sex);
+        gotoxy(30,9); printf("ID      : %d",de[r1[0]].id);
+        gotoxy(30,11); printf("TOTAL   : %.2f",stu[r1[0]].total);
+        gotoxy(30,13); printf("AVERAGE : %.2f",stu[r1[0]].average);
+        gotoxy(30,15); printf("RANK    : %d",stu[r1[0]].rank);
+        gotoxy(30,17);
+        if(strcmp(stu[r1[0]].result,"FAILED")==0)
+        textcolor(RED); printf("RESULT  : ");
+        cprintf("%s",stu[r1[0]].result);
+        textcolor(WHITE);
+        TABLE(5,75,19,23,WHITE);
+        for(j=6;j<74;j++)
+        {
+            gotoxy(j,21); cprintf("%c",196);
+        }
+        for(j=20;j<23;j++)
+        {
+            gotoxy(12,j);   cprintf("%c",179);
+            gotoxy(19,j); cprintf("%c",179);
+            gotoxy(26,j);   cprintf("%c",179);
+            gotoxy(33,j);   cprintf("%c",179);
+            gotoxy(40,j);   cprintf("%c",179);
+            gotoxy(47,j);   cprintf("%c",179);
+            gotoxy(54,j); cprintf("%c",179);
+            gotoxy(61,j); cprintf("%c",179);
+            gotoxy(68,j); cprintf("%c",179);
+        }
+        gotoxy(7,20); cprintf("MATH");
+        gotoxy(14,20); cprintf("PHY");
+        gotoxy(21,20); cprintf("CHEM");
+        gotoxy(28,20); cprintf("KHM");
+        gotoxy(35,20); cprintf("ENG");
+        gotoxy(42,20); cprintf("BIO");
+        gotoxy(49,20); cprintf("PHI");
+        gotoxy(56,20); cprintf("GEO");
+        gotoxy(63,20); cprintf("HIS");
+        gotoxy(70,20); cprintf("EARTH");
+        gotoxy(7,22); if(stu[r1[0]].math<50)       textcolor(RED); cprintf("%.0f",stu[r1[0]].math); textcolor(WHITE);
+        gotoxy(14,22);if(stu[r1[0]].physic<50)     textcolor(RED); cprintf("%.0f",stu[r1[0]].physic);textcolor(WHITE);
+        gotoxy(21,22);if(stu[r1[0]].chemical<50)   textcolor(RED); cprintf("%.0f",stu[r1[0]].chemical);textcolor(WHITE);
+        gotoxy(28,22);if(stu[r1[0]].khmer<50)      textcolor(RED); cprintf("%.0f",stu[r1[0]].khmer);   textcolor(WHITE);
+        gotoxy(35,22);if(stu[r1[0]].english<50)    textcolor(RED); cprintf("%.0f",stu[r1[0]].english); textcolor(WHITE);
+        gotoxy(42,22);if(stu[r1[0]].biology<50)    textcolor(RED); cprintf("%.0f",stu[r1[0]].biology); textcolor(WHITE);
+        gotoxy(49,22);if(stu[r1[0]].philosophy<50) textcolor(RED); cprintf("%.0f",stu[r1[0]].philosophy); textcolor(WHITE);
+        gotoxy(56,22);if(stu[r1[0]].geography<50)  textcolor(RED); cprintf("%.0f",stu[r1[0]].geography);  textcolor(WHITE);
+        gotoxy(63,22);if(stu[r1[0]].history<50)    textcolor(RED); cprintf("%.0f",stu[r1[0]].history);    textcolor(WHITE);
+        gotoxy(70,22);if(stu[r1[0]].earth<50)      textcolor(RED); cprintf("%.0f",stu[r1[0]].earth);      textcolor(WHITE);
+        return;
+    }
+    clrscr();
+    TABLE(32,48,1,3,WHITE);
+    gotoxy(33,2); printf("STUDENT RECORD");
+    TABLE(1,80,5,2**j1+7,WHITE);
+    for(i=7;i<2**j1+7;i+=2)
+        for(j=2;j<80;j++)
+        {
+            gotoxy(j,i); cprintf("%c",196);
+        }
+    for(j=6;j<2**j1+7;j++)
+    {
+        gotoxy(5,j);   cprintf("%c",179);
+        gotoxy(25,j);   cprintf("%c",179);
+        gotoxy(36,j);   cprintf("%c",179);
+        gotoxy(47,j);   cprintf("%c",179);
+        gotoxy(58,j); cprintf("%c",179);
+        gotoxy(69,j);   cprintf("%c",179);
+    }
+    gotoxy(2,6); cprintf("ID");
+    gotoxy(13,6); cprintf("NAME");
+    gotoxy(30,6); cprintf("SEX");
+    gotoxy(40,6); cprintf("TOTAL");
+    gotoxy(52,6); cprintf("AVR");
+    gotoxy(62,6); cprintf("RANK");
+    gotoxy(72,6); cprintf("RESULT");
+    SORT_RECORD();
+    for(i=0;i<*j1;i++)
+    {
+        if(stu[r1[i]].average<50)
+        {
+            textbackground(RED);
+            for(i1=2;i1<80;i1++)
+            {
+                gotoxy(i1,8+k);
+                cprintf(" ");
+            }
+        }
+        textbackground(0);
+        for(j=6;j<2**j1+7;j++)
+        {
+            gotoxy(5,j);   cprintf("%c",179);
+            gotoxy(25,j);   cprintf("%c",179);
+            gotoxy(36,j);   cprintf("%c",179);
+            gotoxy(47,j);   cprintf("%c",179);
+            gotoxy(58,j); cprintf("%c",179);
+            gotoxy(69,j);   cprintf("%c",179);
+        }
+        gotoxy(2,8+k); printf("%d",de[r1[i]].id);
+        gotoxy(7,8+k); printf("%s",de[r1[i]].name);
+        gotoxy(28,8+k); printf("%s",de[r1[i]].sex);
+        gotoxy(39,8+k); printf("%.2f",stu[r1[i]].total);
+        gotoxy(50,8+k); printf("%.2f",stu[r1[i]].average);
+        gotoxy(63,8+k); printf("%d",stu[r1[i]].rank);
+        gotoxy(72,8+k); printf("%s",stu[r1[i]].result);
+        k+=2;
+    }
+}
+void search_stu_sex()
+{
+    clrscr();
+    clrscr();
+    int i,j=0;
+    char stu_sex[15];
+    while(1)
+    {
+        clrscr();
+        TABLE(10,70,2,20,WHITE);
+        TABLE(33,44,1,3,WHITE);
+        gotoxy(34,2); printf("SEX SEARCH");
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(30,12); printf("SEX : "); background(35,55,12,12,LIGHTGREEN);
+        textbackground(WHITE);
+        textcolor(BLACK);gotoxy(40,14); cprintf(" SEARCH ");
+        textcolor(WHITE); textbackground(0);
+        gotoxy(38,12); fflush(stdin); gets(stu_sex);
+        _setcursortype(0);strlwr(stu_sex);
+        background(40,47,14,14,LIGHTGREEN);
+        gotoxy(41,14); printf("SEARCH"); delay(300);
+        if(strlen(stu_sex)==0)
+            continue;
+        break;
+    }
+    if(strcmp(stu_sex,"boy")==0)
+        strcpy(stu_sex,"male");
+    if(strcmp(stu_sex,"girl")==0)
+        strcpy(stu_sex,"female");
+    if(strcmp(stu_sex,"man")==0)
+        strcpy(stu_sex,"male");
+    if(strcmp(stu_sex,"woman")==0)
+        strcpy(stu_sex,"female");
+    if(strcmp(stu_sex,"women")==0)
+        strcpy(stu_sex,"female");
+    if(strcmp(stu_sex,"men")==0)
+        strcpy(stu_sex,"male");
+    for(i=0;i<50;i++)
+    {
+        r1[i]=0;
+    }
+    for(i=0;i<number;i++)   //search if sex is exited;
+        if(strcmp(stu_sex,de[i].sex)==0)
+        {
+            r1[j]=i;
+            j++;
+        }
+    if(j==0){ clrscr(); gotoxy(20,12); printf("Invalid Sex :(. This Sex does not existed."); }
+    else {_setcursortype(0); show_stu_record8(&j);}
+    getch();
+    clrscr(); search_stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,12); cprintf(" %c SEARCH BY SEX     ",16);
+    textbackground(0);
+}
+void search_stu_result()
+{
+    clrscr();
+    clrscr();
+    int i,j=0;
+    char stu_result[15];
+    while(1)
+    {
+        clrscr();
+        TABLE(10,70,2,20,WHITE);
+        TABLE(32,45,1,3,WHITE);
+        gotoxy(33,2); printf("RESULT SEARCH");
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(30,12); printf("RESULT : "); background(39,55,12,12,LIGHTGREEN);
+        textbackground(WHITE);
+        textcolor(BLACK);gotoxy(43,14); cprintf(" SEARCH ");
+        textcolor(WHITE); textbackground(0);
+        gotoxy(42,12); fflush(stdin); gets(stu_result);
+        _setcursortype(0); strupr(stu_result);
+        background(43,50,14,14,LIGHTGREEN);
+        gotoxy(44,14); printf("SEARCH"); delay(300);
+        if(strlen(stu_result)==0)
+            continue;
+        break;
+    }
+    for(i=0;i<50;i++)
+    {
+        r1[i]=0;
+    }
+    if(strcmp(stu_result,"PASS")==0||strcmp(stu_result,"pass")==0)
+        strcpy(stu_result,"PASSED");
+    if(strcmp(stu_result,"FAIL")==0||strcmp(stu_result,"fail")==0)
+        strcpy(stu_result,"FAILED");
+        for(i=0;i<number;i++)
+            if(strcmp(stu_result,stu[i].result)==0)
+            {
+                r1[j]=i;
+                j++;
+            }
+    if(j==0){ clrscr(); gotoxy(20,12); printf("Invalid Result :(. This Result does not existed."); }
+    else {_setcursortype(0); show_stu_record8(&j);}
+    getch();
+    clrscr(); search_stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,14); cprintf(" %c SEARCH BY RESULT  ",16);
+    textbackground(0);
+}
+void get_background2()
+{
+    if(ch==72) h--;
+    if(ch==80) h++;
+    if(h<=0) h=6;
+    if(h>=7) h=1;
+    textbackground(LIGHTGREEN);
+    if(h==1) { gotoxy(27,6);  cprintf(" %c SEARCH BY ID      ",16); textbackground(0); }
+    if(h==2) { gotoxy(27,8);  cprintf(" %c SEARCH BY NAME    ",16); textbackground(0); }
+    if(h==3) { gotoxy(27,10); cprintf(" %c SEARCH BY RANK    ",16); textbackground(0); }
+    if(h==4) { gotoxy(27,12); cprintf(" %c SEARCH BY SEX     ",16); textbackground(0); }
+    if(h==5) { gotoxy(27,14); cprintf(" %c SEARCH BY RESULT  ",16); textbackground(0); }
+    if(h==6) { gotoxy(27,16); cprintf(" %c GO BACK TO MENU   ",16); textbackground(0); }
+}
+void search_stu_menu()
+{
+    clrscr();
+    TABLE(10,70,2,20,WHITE);
+    TABLE(33,46,1,3,WHITE);
+    gotoxy(34,2); printf("SEARCH MENU");
+    gotoxy(27,6); printf("%c SEARCH BY ID",16);
+    gotoxy(27,8); printf("%c SEARCH BY NAME",16);
+    gotoxy(27,10); printf("%c SEARCH BY RANK",16);
+    gotoxy(27,12); printf("%c SEARCH BY SEX",16);
+    gotoxy(27,14); printf("%c SEARCH BY RESULT",16);
+    gotoxy(27,16); printf("%c GO BACK TO MENU",16);
+}
+void get_background()
+{
+    if(ch==72) s--;
+    if(ch==80) s++;
+}
+void show_background()
+{
+    if(s<=0) s=6;
+    if(s>=7) s=1;
+    textbackground(LIGHTGREEN);
+    if(s==1) { gotoxy(28,6);  cprintf(" %c INSERT STUDENT POINT    ",16); textbackground(0);}
+    if(s==2) { gotoxy(28,8);  cprintf(" %c SHOW STUDENT RECORD     ",16); textbackground(0);}
+    if(s==3) { gotoxy(28,10); cprintf(" %c SEARCH STUDENT POINT    ",16); textbackground(0);}
+    if(s==4) { gotoxy(28,12); cprintf(" %c SHOW ALL STUDENT SCORE  ",16); textbackground(0);}
+    if(s==5) { gotoxy(28,14); cprintf(" %c SHOW ALL STUDENT DETAIL ",16); textbackground(0);}
+    if(s==6) { gotoxy(28,16); cprintf(" %c GO BACK TO MAIN MENU    ",16); textbackground(0);}
+}
+void stu_menu()
+{
+    TABLE(10,70,2,20,WHITE);
+    TABLE(32,48,1,3,WHITE);
+    gotoxy(33,2);  printf("STUDENT RECORD");
+    gotoxy(28,6);  printf("%c INSERT STUDENT POINT",16);
+    gotoxy(28,8);  printf("%c SHOW STUDENT RECORD",16);
+    gotoxy(28,10); printf("%c SEARCH STUDENT POINT",16);
+    gotoxy(28,12); printf("%c SHOW ALL STUDENT SCORE",16);
+    gotoxy(28,14); printf("%c SHOW ALL STUDENT DETAIL",16);
+    gotoxy(28,16); printf("%c GO BACK TO MAIN MENU",16);
+}
+void insert_stu()
+{
+    clrscr();
+    e=1;
+    int back1=0;
+    insert_stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf(" %c INSERT ALL STUDENT POINT ",16);
+    textbackground(0);
+    while(1)
+    {
+        ch=getch();  clrscr();
+        if(ch==8) break;
+        if(ch==9)
+        {
+            stu_cmd3(&back1);
+            if(back1!=0) break;
+            insert_stu_menu();
+            show_background1();
+            continue;
+        }
+        insert_stu_menu();
+        get_background1();
+        show_background1();
+        if(e==1&&ch==13) insert_all_stu();
+        if(e==2&&ch==13) insert_one_stu();
+        if(e==3&&ch==13) { show_stu_score();insert_stu_menu(); textbackground(LIGHTGREEN); gotoxy(27,12); cprintf(" %c SHOW ALL STUDENTS SCORE  ",16); textbackground(0);}
+        if(e==4&&ch==13) { SHOW_RECORD(); insert_stu_menu();textbackground(LIGHTGREEN); gotoxy(27,14);    cprintf(" %c VIEW ALL STUDENT DETAIL  ",16); textbackground(0);}
+        if(e==5&&ch==13) break;
+    }
+    clrscr();stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(28,6); cprintf(" %c INSERT STUDENT RECORD    ",16);
+    textbackground(0);
+}
+void stu_cmd3(int *back1)
+{
+    clrscr();
+    char stu_cmd[15];
+    _setcursortype(_NORMALCURSOR);
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10); printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAD : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(38,12); fflush(stdin); gets(stu_cmd);
+    strlwr(stu_cmd); _setcursortype(0);
+    if(strcmp(stu_cmd,"one")==0) insert_one_stu();
+    if(strcmp(stu_cmd,"all")==0) insert_all_stu();
+    if(strcmp(stu_cmd,"back")==0) *back1=1;
+    if(strcmp(stu_cmd,"exit")==0) exit(0);
+    if(strcmp(stu_cmd,"sexit")==0) EXIT();
+    if(strcmp(stu_cmd,"break")==0) *back1=1;
+    if(strcmp(stu_cmd,"show")==0)
+    {
+        SHOW_RECORD(); insert_stu_menu();
+        textbackground(LIGHTGREEN);
+        gotoxy(27,14); cprintf(" %c VIEW ALL STUDENT DETAIL  ",16);
+        textbackground(0);
+    }
+    if(strcmp(stu_cmd,"score")==0||strcmp(stu_cmd,"show score")==0)
+    {
+        show_stu_score(); insert_stu_menu();
+        textbackground(LIGHTGREEN);
+        gotoxy(27,12); cprintf(" %c VIEW ALL STUDENTS SCORE  ",16);
+        textbackground(0);
+    }
+}
+void insert_one_stu()
+{
+    clrscr();
+    int m1=-1,i,id;
+    if(number<=0)
+    {
+        clrscr();
+        gotoxy(13,13); printf("THERE IS NO STUDENT RECORD TO ADD SCORE...");
+        getch(); clrscr();
+        insert_stu_menu(); textbackground(LIGHTGREEN);
+        gotoxy(27,10); cprintf(" %c INSERT ONE STUDENT POINT ",16);
+        textbackground(0); return;
+    }
+    TABLE(32,46,1,3,WHITE);
+    gotoxy(33,2); printf("INSERT RECORD");
+    gotoxy(13,13); printf("Student ID you want to add score : ");
+    _setcursortype(_NORMALCURSOR);
+    fflush(stdin); scanf("%d",&id);
+    for(i=0;i<number;i++)
+        if(de[i].id==id)
+            m1=i;
+    _setcursortype(0);
+    if(m1==-1) {gotoxy(30,15); printf("ID DID NOT MATCHED :(");getch();}
+    else input_one_stu(&m1);
+    find_result();
+    clrscr();
+    insert_stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(27,10); cprintf(" %c INSERT ONE STUDENT POINT ",16);
+    textbackground(0);
+}
+void input_one_stu(int *m1)
+{
+    clrscr();
+    float tmp;
+    insert_menu(); _setcursortype(_NORMALCURSOR);
+    gotoxy(30,4); printf("NAME : %s",de[*m1].name);
+    while(1)
+        {
+            tmp='m';fflush(stdin);
+            background(38,60,6,6,LIGHTGREEN);
+            gotoxy(40,6); scanf("%f",&tmp); stu[*m1].math=tmp;
+            if(stu[*m1].math>=0&&stu[*m1].math<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,8,8,LIGHTGREEN);
+            gotoxy(40,8); scanf("%f",&tmp); stu[*m1].physic=tmp;
+            if(stu[*m1].physic>=0&&stu[*m1].physic<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,10,10,LIGHTGREEN);
+            gotoxy(40,10); scanf("%f",&tmp); stu[*m1].chemical=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m';fflush(stdin);
+            background(38,60,12,12,LIGHTGREEN);
+            gotoxy(40,12); scanf("%f",&tmp); stu[*m1].khmer=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,14,14,LIGHTGREEN);
+            gotoxy(40,14); scanf("%f",&tmp); stu[*m1].english=tmp;
+            if(stu[*m1].english>=0&&stu[*m1].english<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,16,16,LIGHTGREEN);
+            gotoxy(40,16); scanf("%f",&tmp); stu[*m1].biology=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,18,18,LIGHTGREEN);
+            gotoxy(40,18); scanf("%f",&tmp); stu[*m1].philosophy=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,20,20,LIGHTGREEN);
+            gotoxy(40,20); scanf("%f",&tmp); stu[*m1].geography=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,22,22,LIGHTGREEN);
+            gotoxy(40,22); scanf("%f",&tmp); stu[*m1].history=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,24,24,LIGHTGREEN);
+            gotoxy(40,24); scanf("%f",&tmp); stu[*m1].earth=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }   clrscr();
+    _setcursortype(0);
+    gotoxy(15,13); printf("PRESS ANY KEY TO CONTINUE...");
+    getch();
+}
+void insert_all_stu()
+{
+    clrscr();
+    int i;
+    float tmp;
+    if(number<=0)
+    {
+        clrscr();
+        gotoxy(13,13); printf("THERE IS NO STUDENT RECORD TO ADD SCORE...");
+        getch(); clrscr();
+        insert_stu_menu(); textbackground(LIGHTGREEN);
+        gotoxy(27,8);  cprintf(" %c INSERT ALL STUDENT POINT ",16);
+        textbackground(0); return;
+    }
+    for(i=0;i<number;i++)
+    {
+        clrscr();insert_menu(); _setcursortype(_NORMALCURSOR);
+        gotoxy(30,4); printf("NAME : %s",de[i].name);
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,6,6,LIGHTGREEN);
+            gotoxy(40,6); scanf("%f",&tmp); stu[i].math=tmp;
+            if(stu[i].math>=0&&stu[i].math<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,8,8,LIGHTGREEN);
+            gotoxy(40,8); scanf("%f",&tmp); stu[i].physic=tmp;
+            if(stu[i].physic>=0&&stu[i].physic<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,10,10,LIGHTGREEN);
+            gotoxy(40,10); scanf("%f",&tmp); stu[i].chemical=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,12,12,LIGHTGREEN);
+            gotoxy(40,12); scanf("%f",&tmp); stu[i].khmer=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,14,14,LIGHTGREEN);
+            gotoxy(40,14); scanf("%f",&tmp); stu[i].english=tmp;
+            if(stu[i].english>=0&&stu[i].english<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,16,16,LIGHTGREEN);
+            gotoxy(40,16); scanf("%f",&tmp); stu[i].biology=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,18,18,LIGHTGREEN);
+            gotoxy(40,18); scanf("%f",&tmp); stu[i].philosophy=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,20,20,LIGHTGREEN);
+            gotoxy(40,20); scanf("%f",&tmp); stu[i].geography=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,22,22,LIGHTGREEN);
+            gotoxy(40,22); scanf("%f",&tmp); stu[i].history=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+        while(1)
+        {
+            tmp='m'; fflush(stdin);
+            background(38,60,24,24,LIGHTGREEN);
+            gotoxy(40,24); scanf("%f",&tmp); stu[i].earth=tmp;
+            if(tmp>=0&&tmp<=100)   break;
+        }
+    }
+    clrscr();  find_result();
+    _setcursortype(0);
+    gotoxy(15,13); printf("PRESS ANY KEY TO CONTINUE...");
+    getch();
+    clrscr();
+    insert_stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(27,8);  cprintf(" %c INSERT ALL STUDENT POINT ",16);
+    textbackground(0);
+}
+void get_background1()
+{
+    if(ch==72) e--;
+    if(ch==80) e++;
+}
+void show_background1()
+{
+    if(e<=0) e=5;
+    if(e>=6) e=1;
+    textbackground(LIGHTGREEN);
+    if(e==1) { gotoxy(27,8);  cprintf(" %c INSERT ALL STUDENT POINT ",16); textbackground(0);}
+    if(e==2) { gotoxy(27,10); cprintf(" %c INSERT ONE STUDENT POINT ",16); textbackground(0);}
+    if(e==3) { gotoxy(27,12); cprintf(" %c SHOW ALL STUDENTS SCORE  ",16); textbackground(0);}
+    if(e==4) { gotoxy(27,14); cprintf(" %c VIEW ALL STUDENT DETAIL  ",16); textbackground(0);}
+    if(e==5) { gotoxy(27,16); cprintf(" %c GO BACK TO MENU          ",16); textbackground(0);}
+}
+void insert_stu_menu()
+{
+    clrscr();
+    TABLE(10,70,2,20,WHITE);
+    TABLE(33,47,1,3,WHITE);
+    gotoxy(34,2);  printf("INSERT RECORD");
+    gotoxy(27,8);  printf("%c INSERT ALL STUDENT POINT",16);
+    gotoxy(27,10); printf("%c INSERT ONE STUDENT POINT",16);
+    gotoxy(27,12); printf("%c SHOW ALL STUDENTS SCORE",16);
+    gotoxy(27,14); printf("%c VIEW ALL STUDENT DETAIL",16);
+    gotoxy(27,16); printf("%c GO BACK TO MENU",16);
+}
+void insert_menu()
+{
+    TABLE(32,46,1,3,WHITE);
+    gotoxy(33,2); printf("INSERT RECORD");
+    gotoxy(33,2); printf("INSERT RECORD");
+    gotoxy(25,6);  printf("MATH       : "); background(38,60,6,6,LIGHTGREEN);
+    gotoxy(25,8);  printf("PHYSIC     : "); background(38,60,8,8,LIGHTGREEN);
+    gotoxy(25,10);  printf("CHEMICAL   : "); background(38,60,10,10,LIGHTGREEN);
+    gotoxy(25,12); printf("KHMER      : "); background(38,60,12,12,LIGHTGREEN);
+    gotoxy(25,14); printf("ENGLISH    : "); background(38,60,14,14,LIGHTGREEN);
+    gotoxy(25,16); printf("BIOLOGY    : "); background(38,60,16,16,LIGHTGREEN);
+    gotoxy(25,18); printf("PHILOSOPHY : "); background(38,60,18,18,LIGHTGREEN);
+    gotoxy(25,20); printf("GEOGRAPHY  : "); background(38,60,20,20,LIGHTGREEN);
+    gotoxy(25,22); printf("HISTORY    : "); background(38,60,22,22,LIGHTGREEN);
+    gotoxy(25,24); printf("EARTH      : "); background(38,60,24,24,LIGHTGREEN);
+}
+void show_stu()
+{
+    if(number<=8)
+    {
+        int i,k=0,j;
+        clrscr();  textbackground(0);
+        TABLE(34,47,1,3,WHITE);
+        gotoxy(35,2); printf("SHOW RECORD");
+        if(number<=0)
+        {
+            gotoxy(15,12); printf("THERE IS NO STUENT IN THE LIST. PRESS ANYKEY TO CONTINUE...");
+            getch(); clrscr();
+            stu_menu(); textbackground(LIGHTGREEN);
+            gotoxy(28,8); cprintf(" %c SHOW STUDENT RECORD     ",16);
+            textbackground(0); return;
+        }
+        BOX_STU_SHOW();  find_result();
+        for(i=0;i<number;i++)
+        {
+            if(strcmp(stu[i].result,"FAILED")==0)
+            {
+                textbackground(RED);
+                for(j=1;j<80;j++)
+                {
+                    gotoxy(j,8+k);
+                    cprintf(" ");
+                }
+            }
+            BOX_STU_SHOW();
+            textbackground(0);
+            gotoxy(2,8+k);  printf("%d",de[i].id);
+            gotoxy(7,8+k);  printf("%s",de[i].name);
+            gotoxy(28,8+k); printf("%s",de[i].sex);
+            gotoxy(39,8+k); printf("%.2f",stu[i].total);
+            gotoxy(50,8+k); printf("%.2f",stu[i].average);
+            gotoxy(61,8+k); printf("%d",stu[i].rank);
+            gotoxy(72,8+k); printf("%s",stu[i].result);
+            k+=2;
+        }
+        getch();
+        clrscr();
+        stu_menu(); textbackground(LIGHTGREEN);
+        gotoxy(28,8); cprintf(" %c SHOW STUDENT RECORD     ",16);
+        textbackground(0);
+    }
+    if(number>8)
+    {
+    int i,k=0,j,m=0,n=8;
+    while(1)
+    {
+        k=0;
+        clrscr();  textbackground(0);
+        TABLE(34,47,1,3,WHITE);
+        gotoxy(35,2); printf("SHOW RECORD");
+        BOX_STU_SHOW();  find_result();
+        i=m;
+        BOX_STU_SHOW();
+        while(i<n)
+        {
+            if(strcmp(stu[i].result,"FAILED")==0)
+            {
+                textbackground(RED);
+                for(j=1;j<80;j++)
+                {
+                    gotoxy(j,8+k);
+                    cprintf(" ");
+                }
+            }
+            textbackground(0);
+            BOX_STU_SHOW();
+            textbackground(0);
+            gotoxy(2,8+k);  printf("%d",de[i].id);
+            gotoxy(7,8+k);  printf("%s",de[i].name);
+            gotoxy(28,8+k); printf("%s",de[i].sex);
+            gotoxy(39,8+k); printf("%.2f",stu[i].total);
+            gotoxy(50,8+k); printf("%.2f",stu[i].average);
+            gotoxy(61,8+k); printf("%d",stu[i].rank);
+            gotoxy(72,8+k); printf("%s",stu[i].result);
+            k+=2;
+            i++;
+        }
+        ch=getch();
+        if(ch==72)
+        {
+            if(m<=0) continue;
+            m--;
+            n--;
+            continue;
+        }
+        if(ch==80)
+        {
+            if(n>=number) continue;
+            m++;
+            n++;
+            continue;
+        }
+        if(ch==8) break;
+
+    }
+    clrscr();
+    stu_menu(); textbackground(LIGHTGREEN);
+    gotoxy(28,8); cprintf(" %c SHOW STUDENT RECORD     ",16);
+    textbackground(0);
+    }
+}
+void find_result()
+{
+    int i,k=1,j;
+    for(i=0;i<number;i++)
+    {
+        stu[i].total=stu[i].math+stu[i].physic+stu[i].chemical+stu[i].english+stu[i].history+stu[i].biology+stu[i].geography+stu[i].earth+stu[i].philosophy+stu[i].khmer;
+        stu[i].average=stu[i].total/10;
+        if(stu[i].average<50) strcpy(stu[i].result,"FAILED");
+        else strcpy(stu[i].result,"PASSED");
+    }
+    for(i=0;i<number;i++)
+    {
+        k=1;stu[i].rank=k;
+        for(j=0;j<number;j++)
+            if(stu[i].average<stu[j].average)
+                k++;
+        stu[i].rank=k;
+    }
+}
+
+void show_all_stu()
+{
+    clrscr();
+    SHOW_RECORD();
+    clrscr(); stu_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(28,14); cprintf(" %c SHOW ALL STUDENT DETAIL ",16);
+    textbackground(0);
+}
+//START OF SHOW RECORD;
+void SHOW_RECORD()
+{
+    if(number<=8)
+    {
+        int n,i,k=8,max_id;
+        char esc;
+        n=number;
+        clrscr();
+        TABLE(34,46,1,3,WHITE);
+        gotoxy(35,2); printf("SHOW DETAIL");
+        if(n<=0)
+        {
+            clrscr();
+            TABLE(10,70,2,20,WHITE);
+            TABLE(34,46,1,3,WHITE);
+            gotoxy(35,2); printf("SHOW DETAIL");
+            gotoxy(20,11); printf("NO RECORD TO SHOW. PRESS ANYKEY TO GO BACK");
+        }
+        else
+        {
+            BOX_SHOWRECORD();
+            SORT_RECORD();
+            for(i=0;i<number;i++)
+            {
+                gotoxy(2,k); printf("%d",de[i].id);
+                gotoxy(7,k); printf("%s",de[i].name);
+                gotoxy(27,k); printf("%s",de[i].sex);
+                gotoxy(38,k); printf("%d/%s/%d",de[i].day,de[i].month,de[i].year);
+                gotoxy(60,k); printf("%s",de[i].grade);
+                gotoxy(71,k); printf("%.2f",de[i].salary);
+                k+=2;
+            }
+        }
+        esc=getch();
+        if(esc==9) command();
+        clrscr();
+        MENU();
+        textbackground(LIGHTGREEN);
+        gotoxy(30,14); cprintf("  %c SHOW DETAIL         ",16);
+        textbackground(0);
+    }
+    if(number>8)
+    {
+        int n=8,i,k=8,max_id,m=0;
+        char esc;
+        while(1)
+        {
+            k=8;
+            i=m;
+            clrscr();
+            TABLE(34,46,1,3,WHITE);
+            gotoxy(35,2); printf("SHOW DETAIL");
+            BOX_SHOWRECORD();
+            SORT_RECORD();
+            while(i<n)
+            {
+                gotoxy(2,k); printf("%d",de[i].id);
+                gotoxy(7,k); printf("%s",de[i].name);
+                gotoxy(27,k); printf("%s",de[i].sex);
+                gotoxy(38,k); printf("%d/%s/%d",de[i].day,de[i].month,de[i].year);
+                gotoxy(60,k); printf("%s",de[i].grade);
+                gotoxy(71,k); printf("%.2f",de[i].salary);
+                k+=2;
+                i++;
+            }
+            ch=getch();
+            if(ch==72)
+            {
+                if(m<=0) continue;
+                m--;
+                n--;
+                continue;
+            }
+            if(ch==80)
+            {
+                if(n>=number) continue;
+                m++;
+                n++;
+                continue;
+            }
+            if(ch==8) break;
+            if(ch==9) { command(); break;}
+        }
+        clrscr();
+        MENU();
+        textbackground(LIGHTGREEN);
+        gotoxy(30,14); cprintf("  %c SHOW DETAIL         ",16);
+        textbackground(0);
+    }
+}
+void SORT_RECORD()
+{
+    Detail t;
+    STU_RECORD temp;
+    int i,j;
+    for(i=0;i<number-1;i++)
+        for(j=i+1;j<number;j++)
+            if(de[i].id>de[j].id)
+            {
+                t=de[i];
+                de[i]=de[j];
+                de[j]=t;
+                temp=stu[i];
+                stu[i]=stu[j];
+                stu[j]=temp;
+            }
+}  //END OF SHOW RECORD;
+
+//START OF EDIT RECORD;
+void EDIT_RECORD()
+{
+    int n,d=0;
+    n=number;
+    clrscr();
+    b=1;
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,46,1,3,WHITE);
+    gotoxy(35,2); printf("EDIT RECORD");
+    if(n<1)
+    {
+        gotoxy(20,13); printf("NO RECORD TOA EDIT. PRESS ANYKEY TO GO BACK.");
+        getch();
+    }
+    if(n>=1)
+    {
+        EDIT_MENU();
+        textbackground(LIGHTGREEN);
+        gotoxy(27,8); cprintf("  %c ENTER STAFF ID TO EDIT   ",16);
+        textbackground(0);
+        while(1)
+        {
+            g=getch(); if(g==8) break; if(g==9) edit_command(&d);
+            if(d==1) break;
+            clrscr();
+            show_arrow();
+            EDIT_MENU();
+            ED_ARR();
+            if(b==1&&g==13) EDIT_ID();
+            if(b==2&&g==13) EDIT_NAME();
+            if(b==3&&g==13) STAFF_DE();
+            if(b==4&&g==13) break;
+        }
+    }
+    clrscr();
+    MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,8);  cprintf("  %c EDIT DETAIL         ",16);
+    textbackground(0);
+}
+void edit_command(int *d)
+{
+    clrscr();
+    _setcursortype(_NORMALCURSOR);
+    char cmd[20];
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10) ; printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(37,12);fflush(stdin); gets(cmd); strlwr(cmd);
+    if(strcmp(cmd,"id")==0) EDIT_ID();
+    if(strcmp(cmd,"name")==0) EDIT_NAME();
+    if(strcmp(cmd,"show")==0) SHOW_RECORD();
+    if(strcmp(cmd,"exit")==0) exit(0);
+    if(strcmp(cmd,"sexit")==0) EXIT();
+    if(strcmp(cmd,"back")==0)  *d=1;
+    _setcursortype(0); textbackground(0);
+}
+void EDIT_NAME()     //CHOOSE ENTER NAME TO EDIT;
+{
+    clrscr();
+    char name1[20];
+    int i,l=0;
+    TABLE(10,70,5,20,WHITE);
+    TABLE(34,45,1,3,WHITE);
+    gotoxy(35,2); printf("NAME EDIT");
+    gotoxy(25,8); printf("NAME :");
+    background(32,52,8,8,LIGHTGREEN);
+    textbackground(WHITE);
+    gotoxy(37,10);  textcolor(BLACK); cprintf(" SEARCH ");
+    textcolor(WHITE);_setcursortype(_NORMALCURSOR);
+    gotoxy(34,8); fflush(stdin); gets(name1); _setcursortype(0);
+    background(37,44,10,10,LIGHTGREEN);
+    gotoxy(38,10); printf("SEARCH"); delay(200);
+    strupr(name1);
+    for(i=0;i<number;i++)
+    {
+        if(strcmp(de[i].name,name1)==0)
+        {
+            r=i;
+            l=1; break;
+        }
+    }
+    if(l==1) id_edit_menu();
+    if(l==0)
+    {
+        gotoxy(20,16); printf("NAME NOT FOUND. PRESS ANYKEY TO CONTINUE.");
+        getch();
+    }
+    b=2;
+    clrscr();
+    EDIT_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,10); cprintf("  %c ENTER STAFF NAME TO EDIT ",16);
+    textbackground(0);
+}
+void EDIT_ID()    //CHOOSE TO ENTER ID TO EDIT;
+{
+    clrscr();
+    int id,f=0,i;
+    _setcursortype(0);
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,45,1,3,WHITE);
+    gotoxy(35,2); printf("EDIT MENU");
+    gotoxy(30,8); printf("ID : ");
+    background(35,50,8,8,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(38,10); cprintf(" SEARCH ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        _setcursortype(_NORMALCURSOR);
+        background(35,50,8,8,LIGHTGREEN);
+        gotoxy(37,8); fflush(stdin); scanf("%d",&id);
+        if(id>0&&id<=100) break;
+        _setcursortype(0);
+        gotoxy(34,12); printf("INVALID ID");
+        getch();
+        background(33,44,12,12,BLACK);
+    }
+    background(38,45,10,10,LIGHTGREEN);
+    gotoxy(39,10); printf("SEARCH");
+    _setcursortype(0);
+    delay(200);
+    for(i=0;i<number;i++)
+    {
+        if(de[i].id==id)
+        {
+            r=i;
+            f=1 ;
+            break;
+        }
+    }
+    if(f==1) id_edit_menu();
+    if(f==0)
+    {
+        clrscr();
+        gotoxy(18,13); printf("ID NOT FOUND. PRESS ANYKEY TO CONTINUE...");
+        getch();
+    }
+    clrscr();
+    EDIT_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf("  %c ENTER STAFF ID TO EDIT   ",16);
+    textbackground(0);
+}
+void id_edit_menu()
+{
+    b=1;
+    int d;
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(34,45,1,3,WHITE);
+    gotoxy(35,2); printf("EDIT MENU");
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,6); cprintf("  %c EDIT BY ID            ",16);
+    textbackground(0);
+    while(1)
+    {
+        textbackground(0);
+        ch=getch();  if(ch==8) break; if(ch==9) edit_cmd(&d);
+        if(d==1) break;
+        clrscr();
+        edit_menu1();
+        ed_arrow();
+        show_ed_arrow();
+        if(b==1&&ch==13) edit_by_id();
+        if(b==2&&ch==13) edit_by_name();
+        if(b==3&&ch==13) edit_by_sex();
+        if(b==4&&ch==13) edit_by_DOB();
+        if(b==5&&ch==13) edit_by_grade();
+        if(b==6&&ch==13) edit_by_salary();
+        if(b==7&&ch==13) view_info();
+        if(b==8&&ch==13) break;
+    }
+    clrscr();
+    EDIT_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf("  %c ENTER STAFF ID TO EDIT   ",16);
+    textbackground(0);
+}
+void edit_cmd(int *d)
+{
+    clrscr();
+    _setcursortype(_NORMALCURSOR);
+    char cmd[20];
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10) ; printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(37,12);fflush(stdin); gets(cmd); strlwr(cmd);
+    if(strcmp(cmd,"id")==0) edit_by_id();
+    if(strcmp(cmd,"name")==0) edit_by_name();
+    if(strcmp(cmd,"sex")==0) edit_by_sex();
+    if(strcmp(cmd,"dob")==0) edit_by_DOB();
+    if(strcmp(cmd,"date of birth")==0) edit_by_DOB();
+    if(strcmp(cmd,"back")==0)  *d=1;
+    if(strcmp(cmd,"exit")==0) exit(0);
+    if(strcmp(cmd,"sexit")==0) EXIT();
+    if(strcmp(cmd,"grade")==0) edit_by_grade();
+    if(strcmp(cmd,"salary")==0) edit_by_salary();
+    if(strcmp(cmd,"info")==0) view_info();
+    if(strcmp(cmd,"information")==0) view_info();
+    _setcursortype(0); textbackground(0);
+}
+void edit_by_name()
+{
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(34,44,1,3,WHITE);
+    gotoxy(35,2); printf("NAME EDIT");
+    gotoxy(25,8); printf("CURRENT NAME : ");
+    background(40,60,8,8,LIGHTGREEN);
+    gotoxy(42,8); printf("%s",de[r].name);
+    gotoxy(25,10); printf("NEW NAME    : ");
+    background(40,60,10,10,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,12); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        D:
+        _setcursortype(_NORMALCURSOR);
+        background(40,60,10,10,LIGHTGREEN);
+        gotoxy(42,10); fflush(stdin); gets(de[r].name);
+        strupr(de[r].name);
+        if(strlen(de[r].name)<=0)  goto D;
+        if(strlen(de[r].name)>0&&strlen(de[r].name)<20) break;
+        _setcursortype(0);
+        gotoxy(28,14); printf("INVALID NAME");
+        getch();
+        background(27,41,14,14,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,12,12,LIGHTGREEN);
+    gotoxy(35,12); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,8); cprintf("  %c EDIT BY NAME         ",16);
+    textbackground(0);
+}
+void edit_by_sex()
+{
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(35,45,1,3,WHITE);
+    gotoxy(36,2); printf("SEX EDIT");
+    gotoxy(25,8); printf("CURRENT SEX : ");
+    background(39,50,8,8,LIGHTGREEN);
+    gotoxy(40,8); printf("%s",de[r].sex);
+    gotoxy(25,10); printf("NEW SEX    : ");
+    background(39,50,10,10,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,12); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        _setcursortype(_NORMALCURSOR);
+        background(39,50,10,10,LIGHTGREEN);
+        gotoxy(42,10); fflush(stdin); gets(de[r].sex);
+        strlwr(de[r].sex);
+        if(strcmp(de[r].sex,"male")==0) break;
+        if(strcmp(de[r].sex,"female")==0) break;
+        _setcursortype(0);
+        gotoxy(32,14); printf("INVALID SEX");
+        getch();
+        background(27,50,14,14,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,12,12,LIGHTGREEN);
+    gotoxy(35,12); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,10); cprintf("  %c EDIT BY SEX          ",16);
+    textbackground(0);
+}
+void edit_by_DOB()
+{
+    clrscr();
+    char month_name[][20]={"january","february","march","april","may","june","july","august","september","october","november","december"};
+    int j,m;
+    TABLE(10,70,5,22,WHITE);
+    TABLE(30,50,1,3,WHITE);
+    gotoxy(31,2); printf("DATE OF BIRTH EDIT");
+    gotoxy(25,8); printf("CURRENT DATE OF BIRTH : ");
+    background(48,65,8,8,LIGHTGREEN);
+    gotoxy(50,8); printf("%d/%s/%d",de[r].day,de[r].month,de[r].year);
+    gotoxy(40,10); printf("NEW DATE OF BIRTH");
+    gotoxy(25,12); printf("NEW DAY OF BIRTH      : ");
+    background(48,65,12,12,LIGHTGREEN);
+    gotoxy(25,14); printf("NEW MONTH OF BIRTH    : ");
+    background(48,65,14,14,LIGHTGREEN);
+    gotoxy(25,16); printf("NEW YEAR OF BIRTH     : ");
+    background(48,65,16,16,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,18); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    //INPUT DAY;
+    while(1)
+    {
+        de[r].day=0;
+        background(48,65,12,12,LIGHTGREEN);
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(50,12); fflush(stdin);scanf("%d",&de[r].day);
+        textbackground(0);
+        if(de[r].day>0&&de[r].day<=31)
+        break;
+        _setcursortype(0);
+        gotoxy(34,20); printf("INVALID DAY");
+        getch();
+        background(30,45,20,20,BLACK);
+    }
+    //INPUT MONTH;
+    while(1)
+    {
+        _setcursortype(_NORMALCURSOR);
+        B:
+        background(48,65,14,14,LIGHTGREEN);
+        gotoxy(50,14); fflush(stdin); gets(de[r].month);
+        if(strlen(de[r].month)==0)
+        {
+            background(48,65,14,14,LIGHTGREEN);
+            goto B;
+        }
+        textbackground(0);
+        strlwr(de[r].month);
+        for(j=0;j<12;j++)
+        {
+            if(strcmp(de[r].month,month_name[j])==0)
+            {
+            m=1;
+            break;
+            }
+        }
+        if(m==1) break;
+        _setcursortype(0);
+        gotoxy(34,20); printf("INVALID MOUNTH");
+        getch();
+        background(30,50,20,20,BLACK);
+    }
+    //INPUT YEAR;
+    while(1)
+    {
+        de[r].year=0;
+        background(48,65,16,16,LIGHTGREEN);
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(50,16);fflush(stdin); scanf("%d",&de[r].year);
+        textbackground(0);
+        if(de[r].year>1990&&de[r].year<=2000)   break;
+        _setcursortype(0);
+        gotoxy(34,20); printf("INVALID YEAR");
+        getch();
+        background(30,50,20,20,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,18,18,LIGHTGREEN);
+    gotoxy(35,18); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,12); cprintf("  %c EDIT DATE OF BIRTH ",16);
+    textbackground(0);
+}
+void edit_by_grade()
+{
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(34,46,1,3,WHITE);
+    gotoxy(33,2); printf("GRADE EDIT");
+    gotoxy(25,8); printf("CURRENT GRADE : ");
+    background(41,65,8,8,LIGHTGREEN);
+    gotoxy(46,8); printf("%s",de[r].grade);
+    gotoxy(25,10); printf("NEW GRADE    : ");
+    background(41,65,10,10,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,12); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        D:
+        _setcursortype(_NORMALCURSOR);
+        background(44,65,10,10,LIGHTGREEN);
+        gotoxy(46,10); fflush(stdin); gets(de[r].grade);
+        strupr(de[r].grade);
+        if(strlen(de[r].grade)<=0)  goto D;
+        if(strlen(de[r].grade)>0&&strlen(de[r].grade)<20) break;
+        _setcursortype(0);
+        gotoxy(30,14); printf("INVALID GRADE");
+        getch();
+        background(27,41,14,14,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,12,12,LIGHTGREEN);
+    gotoxy(35,12); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,14); cprintf("  %c EDIT BY GRADE        ",16);
+    textbackground(0);
+}
+void edit_by_salary()
+{
+    float temp;
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(33,46,1,3,WHITE);
+    gotoxy(34,2); printf("SALARY EDIT");
+    gotoxy(25,8); printf("CURRENT SALARY : ");
+    background(42,60,8,8,LIGHTGREEN);
+    gotoxy(45,8); printf("%.2f",de[r].salary);
+    gotoxy(25,10); printf("NEW SALARY    : ");
+    background(42,60,10,10,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,12); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        fflush(stdin);
+        _setcursortype(_NORMALCURSOR);
+        background(42,60,10,10,LIGHTGREEN);
+        gotoxy(45,10); scanf("%f",&temp);
+        de[r].salary=temp;
+        if(de[r].salary>=0&&de[r].salary<=10000)  break;
+        _setcursortype(0);
+        gotoxy(32,14); printf("INVALID SALARY");
+        getch();
+        background(30,48,14,14,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,12,12,LIGHTGREEN);
+    gotoxy(35,12); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,16); cprintf("  %c EDIT BY SALARY      ",16);
+    textbackground(0);
+}
+void view_info()
+{
+    clrscr();
+    TABLE(33,46,1,3,WHITE);
+    gotoxy(34,2); printf("SHOW DETAIL");
+    ID_SEARCH_BOX();
+    gotoxy(2,8); printf("%d",de[r].id);
+    gotoxy(7,8); printf("%s",de[r].name);
+    gotoxy(28,8); printf("%s",de[r].sex);
+    gotoxy(38,8); printf("%d/%s/%d",de[r].day,de[r].month,de[r].year);
+    gotoxy(60,8); printf("%s",de[r].grade);
+    gotoxy(72,8); printf("%.2f",de[r].salary);
+    getch();
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,18); cprintf("  %c VIEW INFORMATION     ",16);
+    textbackground(0);
+}
+void edit_by_id()
+{
+    int i;
+    clrscr();
+    TABLE(10,70,5,20,WHITE);
+    TABLE(35,44,1,3,WHITE);
+    gotoxy(36,2); printf("ID EDIT");
+    gotoxy(25,8); printf("CURRENT ID : ");
+    background(38,50,8,8,LIGHTGREEN);
+    gotoxy(40,8); printf("%d",de[r].id);
+    gotoxy(25,10); printf("NEW ID     : ");
+    background(38,50,10,10,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(34,12); cprintf(" SAVE ");
+    textcolor(WHITE);
+    textbackground(0);
+    while(1)
+    {
+        F:
+        fflush(stdin);
+        _setcursortype(_NORMALCURSOR);
+        background(38,50,10,10,LIGHTGREEN);
+        gotoxy(40,10); scanf("%d",&de[r].id);
+        for(i=0;i<number;i++)
+        {
+            if(i==r) continue;
+            if(de[i].id==de[r].id)
+            {
+                gotoxy(28,14); printf("ALREADY EXISTED!");
+                getch(); background(27,50,14,14,BLACK);
+                goto F;
+            }
+        }
+        if(de[r].id>0&&de[r].id<=100)  break;
+        _setcursortype(0);
+        gotoxy(28,14); printf("INVALID ID");
+        getch();
+        background(27,37,14,14,BLACK);
+    }
+    _setcursortype(0);
+    background(34,39,12,12,LIGHTGREEN);
+    gotoxy(35,12); printf("SAVE");
+    delay(200);
+    clrscr();
+    edit_menu1();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,6); cprintf("  %c EDIT BY ID           ",16);
+    textbackground(0);
+}
+void ed_arrow()
+{
+    if(ch==72) b--;
+    if(ch==80) b++;
+}
+void show_ed_arrow()
+{
+    if(b<=0) b=8;
+    if(b>=9) b=1;
+    textbackground(LIGHTGREEN);
+    switch(b)
+    {
+        case 1 : gotoxy(30,6);  cprintf("  %c EDIT BY ID           ",16); textbackground(0); break;
+        case 2 : gotoxy(30,8);  cprintf("  %c EDIT BY NAME         ",16); textbackground(0); break;
+        case 3 : gotoxy(30,10); cprintf("  %c EDIT BY SEX          ",16); textbackground(0); break;
+        case 4 : gotoxy(30,12); cprintf("  %c EDIT BY DATE OF BITH ",16); textbackground(0); break;
+        case 5 : gotoxy(30,14); cprintf("  %c EDIT BY GRADE        ",16); textbackground(0); break;
+        case 6 : gotoxy(30,16); cprintf("  %c EDIT BY SALARY       ",16); textbackground(0); break;
+        case 7 : gotoxy(30,18); cprintf("  %c VIEW INFORMATION     ",16); textbackground(0); break;
+        case 8 : gotoxy(30,20); cprintf("  %c GO BACK TO MENU      ",16); textbackground(0); break;
+    }
+}
+void edit_menu1()
+{
+    clrscr();
+    TABLE(10,70,5,21,WHITE);
+    TABLE(34,45,1,3,WHITE);
+    gotoxy(35,2); printf("EDIT MENU");
+    gotoxy(30,6); printf("%c EDIT BY ID",16);
+    gotoxy(30,8); printf("%c EDIT BY NAME",16);
+    gotoxy(30,10); printf("%c EDIT BY SEX",16);
+    gotoxy(30,12); printf("%c EDIT BY DATE OF BIRTH",16);
+    gotoxy(30,14); printf("%c EDIT BY GRADE",16);
+    gotoxy(30,16); printf("%c EDIT BY SALARY",16);
+    gotoxy(30,18); printf("%c VIEW INFORMATION",16);
+    gotoxy(30,20); printf("%c GO BACK TO MENU",16);
+}
+void STAFF_DE()
+{
+    clrscr();
+    SHOW_RECORD();
+    clrscr();
+    EDIT_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,12); cprintf("  %c SHOW ALL STAFFS DETAIL   ",16);
+    textbackground(0);
+}
+void show_arrow()
+{
+    if(g==72) b--;
+    if(g==80) b++;
+}
+void ED_ARR()
+{
+    if(b<=0) b=4;
+    if(b>=5) b=1;
+    textbackground(LIGHTGREEN);
+    switch(b)
+    {
+        case 1 : gotoxy(27,8);  cprintf("  %c ENTER STAFF ID TO EDIT   ",16);textbackground(0); break;
+        case 2 : gotoxy(27,10);  cprintf("  %c ENTER STAFF NAME TO EDIT ",16);textbackground(0); break;
+        case 3 : gotoxy(27,12); cprintf("  %c SHOW ALL STAFFS DETAIL   ",16);textbackground(0); break;
+        case 4 : gotoxy(27,14); cprintf("  %c GO BACK TO MAIN MENU     ",16);textbackground(0); break;
+    }
+}
+void EDIT_MENU()
+{
+    clrscr();
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,45,1,3,WHITE);
+    gotoxy(35,2); printf("EDIT MENU");
+    gotoxy(27,8); printf("%c ENTER STAFF ID TO EDIT",16);
+    gotoxy(27,10); printf("%c ENTER STAFF NAME TO EDIT",16);
+    gotoxy(27,12); printf("%c SHOW ALL STAFFS DETAIL",16);
+    gotoxy(27,14); printf("%c GO BACK TO MAIN MENU",16);
+} //END OF EDIT RECORD;
+
+//START OF DELET RECORD;
+void DELET_RECORD()
+{
+    int d=0;
+    b=1;
+    clrscr();
+    TABLE(10,70,2,20,WHITE);
+    TABLE(33,47,1,3,WHITE);
+    gotoxy(34,2); printf("DELET DETAIL");
+    if(number<=0)
+    {
+        gotoxy(17,13); printf("NO DETAIL TO DELET. PRESS ANYKEY TO CONTINUE...");
+        getch();textbackground(0);
+        clrscr(); MENU(); textbackground(LIGHTGREEN);
+        gotoxy(30,10); cprintf("  %c DELET DETAIL        ",16);
+        textbackground(0); return;
+    }
+    delet_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf("  %c  DELET ALL DETAIL ",16);
+    textbackground(0);
+    while(1)
+    {
+        textbackground(0);
+        g=getch();     if(g==8) break;
+        if(g==9) delet_command(&d);
+        if(d==1) break;
+        clrscr();
+        show_arrow();
+        delet_menu();
+        delet_arrow();
+        if(b==1&&g==13) delet_all();
+        if(b==2&&g==13) delet_one();
+        if(b==3&&g==13) delet_record();
+        if(b==4&&g==13) break;
+    }
+    textbackground(0);
+    clrscr();
+    MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,10); cprintf("  %c DELET DETAIL        ",16);
+    textbackground(0);
+}
+void delet_command(int *d)
+{
+    _setcursortype(_NORMALCURSOR);
+    clrscr();
+    char cmd[20];
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10); printf("COMMAND PROGRAM");
+    gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(37,12); fflush(stdin); gets(cmd); strlwr(cmd);
+    if(strcmp(cmd,"one")==0) delet_one();
+    if(strcmp(cmd,"all")==0) delet_all();
+    if(strcmp(cmd,"show")==0) SHOW_RECORD();
+    if(strcmp(cmd,"exit")==0) exit(0);
+    if(strcmp(cmd,"sexit")==0) EXIT();
+    if(strcmp(cmd,"back")==0) *d=1;
+    _setcursortype(0);
+}
+void delet_one() //DELET ON STAFF;
+{
+    clrscr();
+    int z=1,i,m=0,p,id;
+    TABLE(10,70,5,20,WHITE);
+    TABLE(33,46,1,3,WHITE);
+    gotoxy(34,2); printf("DELET RECORD");
+    gotoxy(25,8); printf("DELETED ID :");
+    background(38,52,8,8,LIGHTGREEN);
+    textcolor(BLACK);
+    textbackground(WHITE);
+    gotoxy(31,12); cprintf(" DELET ");
+    gotoxy(40,12); cprintf(" CANCEL ");
+    textcolor(WHITE);
+    textbackground(0);
+    _setcursortype(_NORMALCURSOR);
+    gotoxy(42,8);fflush(stdin);scanf("%d",&id);
+    _setcursortype(0);
+    background(31,37,12,12,LIGHTGREEN); gotoxy(32,12); printf("DELET");
+    while(1)
+    {
+        ch=getch();
+        if(ch==75)
+        {
+            z=1; background(31,37,12,12,LIGHTGREEN);
+            gotoxy(32,12); printf("DELET");
+            background(40,47,12,12,BLACK); gotoxy(41,12); printf("CANCEL");
+        }
+        if(ch==77)
+        {
+            z=2; background(31,37,12,12,BLACK);gotoxy(32,12); printf("DELET");
+            background(40,47,12,12,LIGHTGREEN); gotoxy(41,12); printf("CANCEL");
+        }
+        if(z==1&&ch==13) break;
+        if(z==2&&ch==13)
+        {
+            clrscr();
+            delet_menu();
+            textbackground(LIGHTGREEN);
+            gotoxy(27,10); cprintf("  %c DELET ONE DETAIL      ",16);
+            textbackground(0);  return;
+        }
+    }
+    m=0;
+    for(i=0;i<number;i++)       //SEARCH IF ID IS EXISTED;
+    {
+        if(de[i].id==id) { m=1; p=i; break;}
+    }
+    if(m==1){ deleting(); delet(&p);}
+    if(m==0){ gotoxy(15,14); printf("ID DID NOT MATCHED. PRESS ANYKEY TO CONTINUE.");getch();}
+    clrscr();
+    delet_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,10); cprintf("  %c DELET ONE DETAIL      ",16);
+    textbackground(0);
+}
+void delet(int *p)
+{
+    int i;
+    number-=1;
+    for(i=0;i<number;i++)
+    {
+        de[*p+i]=de[*p+i+1];
+        stu[*p+i]=stu[*p+i+1];
+    }
+}
+void delet_record()
+{
+    clrscr();
+    SHOW_RECORD();
+    clrscr();
+    delet_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,12); cprintf("  %c SHOW ALL DETAILS     ",16);
+    textbackground(0);
+}
+void delet_all()
+{
+    _setcursortype(0);
+    int J=1;
+    clrscr();
+    TABLE(33,47,1,3,WHITE); gotoxy(34,2); printf("DELET DETAIL");
+    TABLE(10,70,5,14,WHITE);
+    if(number<=0)
+    {
+        gotoxy(15,11); printf("NO DETAIL TO DELET. PRESS ANYKEY TO CONTINUE...");getch();
+        clrscr(); textbackground(0); delet_menu();
+        textbackground(LIGHTGREEN);
+        gotoxy(27,8); cprintf("  %c DELET ALL SETAILS   ",16);
+        textbackground(0); return;
+    }
+    gotoxy(25,7); printf("ARE YOU SURE YOU WANT TO DELET");
+    gotoxy(35,9); printf("ALL DETAIL?");
+    gotoxy(33,12); printf("YES"); gotoxy(47,12); printf("NO");
+    gotoxy(10,18); printf("%c USE ARROWKEY [ %c%c ] TO MOVE",16,24,25);
+    textbackground(LIGHTGREEN); gotoxy(32,12); cprintf(" YES ");
+    textbackground(0);
+    while(1)
+    {
+        ch=getch();
+        if(ch==75) {
+                background(32,36,12,12,LIGHTGREEN); gotoxy(33,12); printf("YES");
+                background(46,49,12,12,BLACK); gotoxy(47,12); printf("NO"); J=1;
+               }
+        if(ch==77) {
+                background(32,36,12,12,BLACK); gotoxy(33,12); printf("YES");
+                background(46,49,12,12,LIGHTGREEN); gotoxy(47,12); printf("NO"); J=0;
+               }
+        if(ch==13&&J==1) { deleting();delet_all_score(); number=0; break;}
+        if(ch==13&&J==0) break;
+    }
+    clrscr();
+    textbackground(0);
+    delet_menu();
+    textbackground(LIGHTGREEN);
+    gotoxy(27,8); cprintf("  %c DELET ALL DETAILS   ",16);
+    textbackground(0);
+}
+void delet_all_score()
+{
+    int i;
+    STU_RECORD temp={0,0,0,0,0,0,0,0,0,0,0,'a',0};
+    for(i=0;i<number;i++)
+    {
+        stu[i]=temp;
+    }
+}
+void delet_arrow()
+{
+    if(b<=0) b=4;
+    if(b>=5) b=1;
+    textbackground(LIGHTGREEN);
+    switch(b)
+    {
+        case 1 : gotoxy(27,8);  cprintf("  %c DELET ALL DETAILS    ",16); textbackground(0); break;
+        case 2 : gotoxy(27,10); cprintf("  %c DELET ONE DETAIL     ",16); textbackground(0); break;
+        case 3 : gotoxy(27,12); cprintf("  %c SHOW ALL DETAILS     ",16); textbackground(0); break;
+        case 4 : gotoxy(27,14); cprintf("  %c GO BACK TO MAIN MENU ",16); textbackground(0); break;
+    }
+}
+void delet_menu()
+{
+    clrscr();
+    TABLE(10,70,2,20,WHITE);
+    TABLE(33,47,1,3,WHITE);
+    gotoxy(34,2);  printf("DELET DETAIL");
+    gotoxy(27,8);  printf("%c DELET ALL DETAILS",16);
+    gotoxy(27,10); printf("%c DELET ONE DETAIL",16);
+    gotoxy(27,12); printf("%c SHOW ALL DETAILS",16);
+    gotoxy(27,14); printf("%c GO BACK TO MAIN MENU",16);
+}
+
+//START OF SEARCH RECORD;
+void SEARCH_RECORD()
+{
+    clrscr();
+    int n,d=0;
+    n=number;
+    b=1;
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,48,1,3,WHITE);
+    gotoxy(35,2); printf("SEARCH DETAIL");
+    if(n<=0)
+    {
+        gotoxy(20,11); printf("NO DETAIL TO SEARCH. PRESS ANYKEY TO GO BACK");
+        getch();
+    }
+    else
+    {
+        clrscr();
+        SEARCH_MENU();
+        textbackground(LIGHTGREEN);
+        gotoxy(32,8); cprintf("  %c SEARCH BY ID       ",16);
+        textbackground(0);
+        while(1)
+        {
+            textbackground(0);
+            ch=getch(); if(ch==8) break; if(ch==9) search_command(&d);
+            if(d==1) break;
+            clrscr();
+            arrow1();
+            SEARCH_MENU();
+            show_arrow1();
+            if(b==1&&ch==13) ID_SEARCH();
+            if(b==2&&ch==13) NAME_SEARCH();
+            if(b==3&&ch==13) STAFF_DETAIL();
+            if(b==4&&ch==13) break;
+        }
+    }
+    clrscr();
+    MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,12);      cprintf("  %c SEARCH DETAIL       ",16);
+    textbackground(0);
+}
+void search_command(int *d)
+{
+    clrscr();
+    _setcursortype(_NORMALCURSOR);
+    char cmd[20];
+    TABLE(20,65,8,14,WHITE);
+    gotoxy(30,10) ; printf("COMMAND LINE PROGRAM");
+    gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+    gotoxy(37,12);fflush(stdin); gets(cmd); strlwr(cmd);
+    if(strcmp(cmd,"id")==0) ID_SEARCH();
+    if(strcmp(cmd,"name")==0) NAME_SEARCH();
+    if(strcmp(cmd,"show")==0) SHOW_RECORD();
+    if(strcmp(cmd,"exit")==0) exit(0);
+    if(strcmp(cmd,"sexit")==0) EXIT();
+    if(strcmp(cmd,"back")==0)  *d=1;
+    _setcursortype(0);
+}
+void arrow1()
+{
+    if(ch==72) b--;
+    if(ch==80) b++;
+}
+void show_arrow1()
+{
+    if(b<=0) b=4;
+    if(b>=5) b=1;
+    _setcursortype(0);
+    textbackground(LIGHTGREEN);
+    switch(b)
+    {
+        case 1 : gotoxy(32,8) ; cprintf("  %c SEARCH BY ID       ",16);textbackground(0); break;
+        case 2 : gotoxy(32,10); cprintf("  %c SEARCH BY NAME     ",16);textbackground(0); break;
+        case 3 : gotoxy(32,12); cprintf("  %c SHOW STAFFS DETAIL ",16);textbackground(0); break;
+        case 4 : gotoxy(32,14); cprintf("  %c BACK TO MAIN MENU  ",16);textbackground(0); break;
+    }
+}
+void ID_SEARCH()    //choose id to search;
+{
+    C:
+    clrscr();
+    _setcursortype(_NORMALCURSOR);
+    int id,f=0,i,p;
+    TABLE(34,46,1,3,WHITE);gotoxy(35,2); printf("ID SEARCH");
+    gotoxy(28,8); printf("ID : ");
+    textbackground(WHITE);
+    background(33,48,8,8,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);   fflush(stdin);
+    gotoxy(36,10); cprintf(" SEARCH ");
+    gotoxy(35,8); scanf("%d",&id);
+    if(id<=0&&id>100)
+    {
+        _setcursortype(0);
+        gotoxy(30,12); printf("INVALID ID");
+        goto C;
+    }
+    textbackground(LIGHTGREEN);
+    _setcursortype(0);
+    gotoxy(36,10); cprintf(" SEARCH ");
+    delay(200);
+    textbackground(0);
+    textcolor(WHITE);
+    for(i=0;i<=number;i++)
+    {
+        if(de[i].id==id)
+        {
+            f=1;
+            p=i;
+            break;
+        }
+    }
+    if(f==0)
+    {
+        _setcursortype(0);
+        gotoxy(20,13); printf("ID NOT FOUND. PRESS ANYKEY TO GO TO MAIN MENU.");
+    }
+    if(f!=0)
+    {
+        clrscr();
+        TABLE(34,46,1,3,WHITE); gotoxy(35,2); printf("ID SEARCH");
+        ID_SEARCH_BOX();
+        gotoxy(2,8); printf("%d",de[p].id);
+        gotoxy(7,8); printf("%s",de[p].name);
+        gotoxy(27,8); printf("%s",de[p].sex);
+        gotoxy(38,8); printf("%d/%s/%d",de[p].day,de[p].month,de[p].year);
+        gotoxy(60,8); printf("%s",de[p].grade);
+        gotoxy(71,8); printf("%.2f",de[p].salary);
+    }
+    r=p;
+    search_option();
+    clrscr();
+    SEARCH_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(32,8); cprintf("  %c SEARCH BY ID       ",16);
+    textbackground(0);
+}
+void search_option()
+{
+    char cmd[20],search;
+    search=getch();
+    if(search==9)
+    {
+        clrscr();
+        TABLE(20,65,8,14,WHITE); _setcursortype(_NORMALCURSOR);
+        gotoxy(30,10) ; printf("COMMAND LINE PROGRAM");
+        gotoxy(25,12); printf("COMMAND : "); background(36,60,12,12,LIGHTGREEN);
+        gotoxy(37,12);fflush(stdin); gets(cmd); strlwr(cmd);_setcursortype(0);
+        if(strcmp(cmd,"edit")==0) id_edit_menu();
+        if(strcmp(cmd,"delet")==0) {deleting();delet(&r);}
+        if(strcmp(cmd,"show")==0) SHOW_RECORD();
+        if(strcmp(cmd,"exit")==0) exit(0);
+        if(strcmp(cmd,"sexit")==0) EXIT();
+        _setcursortype(0); textbackground(0);
+    }
+}
+void NAME_SEARCH()
+{
+    clrscr();
+    char name[20];
+    int f=0,m,i;
+    TABLE(33,46,1,3,WHITE);
+    gotoxy(34,2); printf("NAME SEARCH");
+    gotoxy(25,8); printf("NAME : ");
+    background(32,52,8,8,LIGHTGREEN);
+    textbackground(WHITE);
+    textcolor(BLACK);
+    gotoxy(36,10); cprintf(" SEARCH ");
+    textbackground(0);
+    textcolor(WHITE);
+    while(1)
+    {
+        fflush(stdin);
+        _setcursortype(_NORMALCURSOR);
+        gotoxy(34,8);gets(name);
+        if(strlen(name)<=0)
+        {
+            textcolor(WHITE);
+            _setcursortype(0);
+            gotoxy(33,12); printf("INVALID NAME");
+            background(32,52,8,8,LIGHTGREEN);
+            getch();
+            background(33,45,12,12,BLACK);
+        }
+        if(strlen(name)>0) break;
+    }
+    background(36,43,10,10,LIGHTGREEN);
+    _setcursortype(0);
+    gotoxy(37,10); printf("SEARCH");
+    delay(200);
+    strupr(name);
+    for(i=0;i<number;i++)
+    {
+        if(strcmp(name,de[i].name)==0)
+        {
+            f=1;
+            m=i;
+            break;
+        }
+        else
+            f=0;
+    }
+    if(f==0)
+    {
+        gotoxy(15,14); printf("NAME NOT FOUND. PRESS ANYKEY TO CONTINUE...");
+    }
+    if(f!=0)
+    {
+        clrscr();
+        TABLE(33,46,1,3,WHITE);
+        gotoxy(34,2); printf("NAME SEARCH");
+        ID_SEARCH_BOX();
+        gotoxy(2,8); printf("%d",de[m].id);
+        gotoxy(7,8); printf("%s",de[m].name);
+        gotoxy(27,8); printf("%s",de[m].sex);
+        gotoxy(38,8); printf("%d/%s/%d",de[m].day,de[m].month,de[m].year);
+        gotoxy(60,8); printf("%s",de[m].grade);
+        gotoxy(71,8); printf("%.2f",de[m].salary);
+    }
+    r=m;
+    search_option();
+    clrscr();
+    SEARCH_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(32,10); cprintf("  %c SEARCH BY NAME     ",16);
+    textbackground(0);
+}
+void STAFF_DETAIL()
+{
+    clrscr();
+    SHOW_RECORD();
+    clrscr();
+    SEARCH_MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(32,12); cprintf("  %c SHOW STAFF DETAIL  ",16);
+    textbackground(0);
+}
+
+void SEARCH_MENU()
+{
+    TABLE(10,70,2,20,WHITE);
+    TABLE(34,48,1,3,WHITE);
+    gotoxy(35,2); printf("SEARCH DETAIL");
+    gotoxy(32,8); printf("%c SEARCH BY ID",16);
+    gotoxy(32,10); printf("%c SEARCH BY NAME",16);
+    gotoxy(32,12); printf("%c SHOW STAFFS DETAIL",16);
+    gotoxy(32,14); printf("%c BACK TO MAIN MENU",16);
+}
+//END OF SEARCH RECORD;
+void INSERT_RECORD()
+{
+    int i,j,k,m=0;
+    float money;
+    char month_name[][20]={"january","february","march","april","may","june","july","august","september","october","november","december"};
+    clrscr();
+    TABLE(10,70,2,18,WHITE);
+    TABLE(33,47,1,3,WHITE);
+    gotoxy(34,2); printf("INSERT DETAIL");
+    while(1)
+    {
+        clrscr();
+        fflush(stdin);
+        TABLE(10,70,2,18,WHITE);
+        TABLE(33,47,1,3,WHITE);
+        gotoxy(34,2); printf("INSERT DETAIL");
+        gotoxy(29,10); printf("Number of Staff:  ");
+        _setcursortype(_NORMALCURSOR);
+        scanf("%d",&k);
+        if(k>0&&k<=20) break;
+        if(k<=0||k>20)
+        {
+            gotoxy(25,10);
+            _setcursortype(0);
+            printf("Please input number from 1 to 20");
+        }
+        if(number>20)
+        {
+            _setcursortype(0);
+            number-=k;
+            gotoxy(25,10); printf("You have input Staff more than 20.");
+            getch(); clrscr(); break;
+        }
+        getch();
+    }
+    INSERT_MENU();
+    _setcursortype(_NORMALCURSOR);
+    for(i=number;i<number+k;i++)
+    {
+        de[i].id=0;
+        INSERT_MENU();
+        TABLE(10,70,19,25,WHITE);
+        gotoxy(33,4); printf("RECORD OF STAFF %d",i+1);
+        //INPUT ID;
+        while(1)
+        {
+            A:
+            fflush(stdin);
+            background(34,57,6,6,LIGHTGREEN);
+            gotoxy(21,24);   printf("                                               ");
+            gotoxy(12,20); printf("ID     : This is the identified number of a Staff.\n ");
+            gotoxy(21,21); printf("A staff have his own unique ID.");
+            gotoxy(12,22); printf("Warning: Make Sure that ID is between number 1 to 100.");
+            gotoxy(12,24); printf("Error  :");
+            _setcursortype(_NORMALCURSOR);
+            gotoxy(35,6); scanf("%d",&de[i].id);
+            if(i>0)           //Find if ID is already input;
+            {
+                for(j=0;j<i;j++)
+                {
+                    if(de[i].id==de[j].id)
+                    {
+                        _setcursortype(0);
+                        gotoxy(21,24); printf("This ID already existed. Please input again.");
+                        getch(); goto A;
+                    }
+                }
+            }
+            if(de[i].id>0&&de[i].id<=100) break;
+            if(de[i].id<=0||de[i].id>100)     //Find id ID is not between 1 to 100;
+            {
+                _setcursortype(0);
+                gotoxy(21,24); printf("Invalid Number. Please input again.");
+                getch();
+
+            }
+        }
+        //INPUT NAME;
+        while(1)
+        {
+            _setcursortype(_NORMALCURSOR);
+            background(34,57,8,8,LIGHTGREEN);
+            gotoxy(12,20); printf("NAME    : Please, Insert name of Staffs.                ");
+            gotoxy(12,21); printf("                                                        ");
+            gotoxy(12,22); printf("Warning : This include Last name and First name.        ");
+            gotoxy(12,24); printf("Error   :");
+            gotoxy(22,24); printf("                                              ");
+            gotoxy(35,8); fflush(stdin); gets(de[i].name);
+            if(strlen(de[i].name)>0)
+            {
+                strupr(de[i].name);
+                break;
+            }
+            else
+            {
+            printf("");
+            _setcursortype(0);
+            gotoxy(22,24); printf("Please, Input Your Name.");
+            getch();
+            }
+        }
+        //INPUT SEX;
+        while(1)
+        {
+            _setcursortype(_NORMALCURSOR);
+            background(34,57,10,10,LIGHTGREEN);
+            gotoxy(12,20); printf("SEX     : Please, Insert sex of Staff.                   ");
+            gotoxy(12,21); printf("                                                         ");
+            gotoxy(12,22); printf("Warning : Input full word. e.g: Male,male,Female,female. ");
+            gotoxy(12,24); printf("Error   :                                                ");
+            gotoxy(35,10); fflush(stdin); gets(de[i].sex);
+            strlwr(de[i].sex);
+            if(strcmp(de[i].sex,"male")==0) break;
+            if(strcmp(de[i].sex,"female")==0) break;
+            _setcursortype(0);
+            gotoxy(22,24); printf("Invalid Sex                     ");
+            getch();
+        }
+        //INPUT DAY;
+        while(1)
+        {
+            _setcursortype(_NORMALCURSOR);
+            fflush(stdin);
+            gotoxy(12,20); printf("D-O-S   : Please, input Date of birth of the Staff. ");
+            gotoxy(12,22); printf("Warning : Day [from 1 to 31], Month[Full word. e.g March].");
+            gotoxy(12,24); printf("Error   :");
+            textbackground(WHITE);
+            gotoxy(22,24); printf("                                            ");
+            background(34,37,12,12,LIGHTGREEN);
+            gotoxy(35,12); scanf("%d",&de[i].day);
+            textbackground(0);
+            if(de[i].day>0&&de[i].day<=31)
+            break;
+            _setcursortype(0);
+            gotoxy(22,24); printf("Invalid day.                                ");
+            getch();
+        }
+        //INPUT MONTH;
+        while(1)
+        {
+            m=0;
+            _setcursortype(_NORMALCURSOR);
+            gotoxy(12,20); printf("D-O-S   : Please, input Date of birth of the Staff. ");
+            gotoxy(12,22); printf("Warning : Day [from 1 to 31], Month[Full word. e.g March].");
+            gotoxy(12,24); printf("Error   :");
+            textbackground(WHITE);
+            B:
+            _setcursortype(_NORMALCURSOR);
+            gotoxy(22,24); printf("                                            ");
+            background(39,50,12,12,LIGHTGREEN);
+            gotoxy(40,12); fflush(stdin); gets(de[i].month);
+            if(strlen(de[i].month)==0)
+            {
+                _setcursortype(0);
+                gotoxy(22,24); printf("Please, input your month of Birth.           ");
+                goto B;
+            }
+            textbackground(0);
+            if(strcmp(de[i].month,"1")==0||strcmp(de[i].month,"01")==0)
+            {   strcpy(de[i].month,"january");
+
+                break;
+            }
+            if(strcmp(de[i].month,"2")==0||strcmp(de[i].month,"02")==0)
+            {
+                strcpy(de[i].month,"february");
+                break;
+            }
+            if(strcmp(de[i].month,"3")==0||strcmp(de[i].month,"03")==0)
+            {
+                strcpy(de[i].month,"march");
+                break;
+            }
+            if(strcmp(de[i].month,"4")==0||strcmp(de[i].month,"04")==0)
+            {
+                strcpy(de[i].month,"april");
+                break;
+            }
+            if(strcmp(de[i].month,"5")==0||strcmp(de[i].month,"05")==0)
+            {
+                strcpy(de[i].month,"may");
+                break;
+            }
+            if(strcmp(de[i].month,"6")==0||strcmp(de[i].month,"06")==0)
+            {
+                strcpy(de[i].month,"june");
+                break;
+            }
+            if(strcmp(de[i].month,"7")==0||strcmp(de[i].month,"07")==0)
+            {
+                strcpy(de[i].month,"july");
+                break;
+            }
+            if(strcmp(de[i].month,"8")==0||strcmp(de[i].month,"08")==0)
+            {
+                strcpy(de[i].month,"august");
+                break;
+            }
+            if(strcmp(de[i].month,"9")==0||strcmp(de[i].month,"09")==0)
+            {
+                strcpy(de[i].month,"september");
+                break;
+            }
+            if(strcmp(de[i].month,"10")==0)
+            {
+                strcpy(de[i].month,"october");
+                break;
+            }
+            if(strcmp(de[i].month,"11")==0)
+            {
+                strcpy(de[i].month,"november");
+                break;
+            }
+            if(strcmp(de[i].month,"12")==0)
+            {
+                strcpy(de[i].month,"december");
+                break;
+            }
+            strlwr(de[i].month);
+            for(j=0;j<12;j++)
+            {
+                if(strcmp(de[i].month,month_name[j])==0)
+                {
+                    m=1;
+                    break;
+                }
+            }
+            if(m==1) break;
+            _setcursortype(0);
+            gotoxy(22,24); printf("Invalid Month.                               ");
+            getch();
+        }
+        //INPUT YEAR;
+        while(1)
+        {
+            fflush(stdin);
+            _setcursortype(_NORMALCURSOR);
+            gotoxy(12,20); printf("D-O-S   : Please, input Date of birth of the Staff. ");
+            gotoxy(12,22); printf("Warning : Day [from 1 to 31], Month[Full word e.g March]. ");
+            gotoxy(12,24); printf("Error   :");
+            textbackground(WHITE);
+            gotoxy(22,24); printf("                                            ");
+            gotoxy(52,12); background(52,57,12,12,LIGHTGREEN);
+            gotoxy(53,12); scanf("%d",&de[i].year);
+            textbackground(0);
+            if(de[i].year>1990&&de[i].year<=2000)
+            break;
+            _setcursortype(0);
+            gotoxy(22,24); printf("Invalid year.                                ");
+            getch();
+        }
+        //INPUT POSITION;
+        while(1)
+        {
+            background(34,57,14,14,LIGHTGREEN);
+            gotoxy(12,20); printf("POSITION : Please, Insert position of Staffs.           ");
+            gotoxy(12,21); printf("                                                        ");
+            gotoxy(12,22); printf("Warning : Position must not longer than 20 words        ");
+            gotoxy(12,24); printf("Error   :");
+            gotoxy(22,24); printf("                                             ");
+            gotoxy(35,14); fflush(stdin); gets(de[i].grade);
+            if(strlen(de[i].grade)>0&&strlen(de[i].grade)<=15)
+            {
+                strupr(de[i].grade);
+                break;
+            }
+            if(strlen(de[i].grade)<=0)
+            {
+                printf("");
+                gotoxy(22,24); printf("Please, Input Your Position.          ");
+                getch();
+            }
+            if(strlen(de[i].grade)>15)
+            {
+                gotoxy(22,24); printf("Position must not longer than 15 word");
+                getch();
+            }
+        }
+        //INPUT SALARY;
+        while(1)
+        {
+            _setcursortype(_NORMALCURSOR);
+            fflush(stdin);
+            background(34,57,16,16,LIGHTGREEN);
+            gotoxy(12,20); printf("SALARY : Please, Insert Salary of Staffs.           ");
+            gotoxy(12,21); printf("                                                        ");
+            gotoxy(12,22); printf("Warning : Salaey must not greater than $10000         ");
+            gotoxy(12,24); printf("Error   :");
+            gotoxy(22,24); printf("                                          ");
+            gotoxy(35,16); scanf("%f",&money);
+            de[i].salary=money;
+            if(de[i].salary>0&&de[i].salary<=10000)
+            break;
+            else
+            {
+                _setcursortype(0);
+                gotoxy(22,24); printf("Invalid salary.                              ");
+                getch();
+            }
+        }
+        clrscr();
+        _setcursortype(0);
+        gotoxy(22,13); printf("Press any key to continue...");
+    }
+    number+=k;
+    SORT_RECORD();
+    getch();
+    clrscr();
+    MENU();
+    textbackground(LIGHTGREEN);
+    gotoxy(30,6);       cprintf("  %c INSERT STAFF DETAIL ",16);
+    textbackground(0);
+}
+void INSERT_MENU()
+{
+    clrscr();
+    _setcursortype(0);
+    TABLE(10,70,2,18,WHITE);
+    TABLE(33,47,1,3,WHITE);
+    gotoxy(34,2); printf("INSERT DETAIL");
+    gotoxy(25,6);  printf("ID      :"); background(34,57,6,6,LIGHTGREEN);
+    gotoxy(25,8);  printf("Name    :"); background(34,57,8,8,LIGHTGREEN);
+    gotoxy(25,10); printf("Sex     :"); background(34,57,10,10,LIGHTGREEN);
+    gotoxy(25,12); printf("D-O-B   :"); background(34,57,12,12,LIGHTGREEN);
+    textcolor(BLACK);
+    gotoxy(38,12); cprintf(" ");
+    gotoxy(51,12); cprintf(" ");
+    textcolor(WHITE);
+    gotoxy(25,14); printf("Grade   :"); background(34,57,14,14,LIGHTGREEN);
+    gotoxy(25,16); printf("Salary  :"); background(34,57,16,16,LIGHTGREEN);
+}
+void LOAD()
+{
+    _setcursortype(0);
+    int j;
+    for(j=30;j<=50;j++)
+    {
+        textbackground(WHITE);
+        gotoxy(j,13); cprintf(" ");
+    }
+    gotoxy(34,14); printf(" LOADING....");
+    textbackground(LIGHTGREEN);
+    for(j=30;j<=50;j++)
+    {
+        gotoxy(j,13);
+        cprintf(" ");
+        gotoxy(38,13);
+        delay(100);
+    }
+    textbackground(0);
+    gotoxy(34,14); printf(" COMPLETED  ");
+    gotoxy(27,16); printf("PRESS ANY KEY TO CONTINUE");
+}
+void background(int a1,int a2,int b1,int b2,int color)
+{
+    int i,j;
+    textbackground(color);
+    for(i=a1;i<=a2;i++)
+        for(j=b1;j<=b2;j++)
+        {
+            gotoxy(i,j); cprintf(" ");
+        }
+    textbackground(0);
+}
+void BOX_SHOWRECORD()
+{
+    if(number<=8)
+    {
+        _setcursortype(0);
+        int i,j;
+        TABLE(1,80,5,2*number+7,WHITE);
+        for(i=7;i<2*number+7;i+=2)
+            for(j=2;j<80;j++)
+            {
+                gotoxy(j,i); cprintf("%c",196);
+            }
+        for(j=6;j<2*number+7;j++)
+        {
+            gotoxy(5,j);   cprintf("%c",179);
+            gotoxy(25,j);   cprintf("%c",179);
+            gotoxy(35,j);   cprintf("%c",179);
+            gotoxy(55,j);   cprintf("%c",179);
+            gotoxy(70,j); cprintf("%c",179);
+        }
+        gotoxy(2,6); cprintf("ID");
+        gotoxy(13,6); cprintf("NAME");
+        gotoxy(29,6); cprintf("SEX");
+        gotoxy(40,6); cprintf("DATE OF BIRTH");
+        gotoxy(60,6); cprintf("GRADE");
+        gotoxy(73,6); cprintf("SALARY");
+    }
+    if(number>8)
+    {
+        _setcursortype(0);
+        int i,j;
+        TABLE(1,80,5,2*8+7,WHITE);
+        for(i=7;i<2*8+7;i+=2)
+            for(j=2;j<80;j++)
+            {
+                gotoxy(j,i); cprintf("%c",196);
+            }
+        for(j=6;j<2*8+7;j++)
+        {
+            gotoxy(5,j);   cprintf("%c",179);
+            gotoxy(25,j);   cprintf("%c",179);
+            gotoxy(35,j);   cprintf("%c",179);
+            gotoxy(55,j);   cprintf("%c",179);
+            gotoxy(70,j); cprintf("%c",179);
+        }
+        gotoxy(2,6); cprintf("ID");
+        gotoxy(13,6); cprintf("NAME");
+        gotoxy(29,6); cprintf("SEX");
+        gotoxy(40,6); cprintf("DATE OF BIRTH");
+        gotoxy(60,6); cprintf("GRADE");
+        gotoxy(73,6); cprintf("SALARY");
+    }
+}
+void ID_SEARCH_BOX()
+{
+    _setcursortype(0);
+    int i,j;
+    TABLE(1,80,5,9,WHITE);
+    for(i=7;i<9;i+=2)
+        for(j=2;j<80;j++)
+        {
+            gotoxy(j,i); cprintf("%c",196);
+        }
+    for(j=6;j<9;j++)
+    {
+        gotoxy(5,j);   cprintf("%c",179);
+        gotoxy(25,j);   cprintf("%c",179);
+        gotoxy(35,j);   cprintf("%c",179);
+        gotoxy(55,j);   cprintf("%c",179);
+        gotoxy(70,j); cprintf("%c",179);
+    }
+    gotoxy(2,6); cprintf("ID");
+    gotoxy(13,6); cprintf("NAME");
+    gotoxy(29,6); cprintf("SEX");
+    gotoxy(40,6); cprintf("DATE OF BIRTH");
+    gotoxy(60,6); cprintf("GRADE");
+    gotoxy(73,6); cprintf("SALARY");
+}
+void deleting()
+{
+    _setcursortype(0);
+    int j;
+    for(j=30;j<=50;j++)
+    {
+        textbackground(WHITE);
+        gotoxy(j,15); cprintf(" ");
+    }
+    gotoxy(34,16); printf(" DELETING....");
+    textbackground(LIGHTGREEN);
+    for(j=30;j<=50;j++)
+    {
+        gotoxy(j,15);
+        cprintf(" ");
+        delay(100);
+    }
+    textbackground(0);
+    clrscr();
+}
+void BOX_STU_SHOW()
+{
+    int i,j;
+    if(number>8)
+    {
+        TABLE(1,80,5,2*8+7,WHITE);
+        for(i=7;i<2*8+7;i+=2)
+            for(j=2;j<80;j++)
+            {
+                gotoxy(j,i); cprintf("%c",196);
+            }
+        for(j=6;j<2*8+7;j++)
+        {
+            gotoxy(5,j);   cprintf("%c",179);
+            gotoxy(25,j);   cprintf("%c",179);
+            gotoxy(36,j);   cprintf("%c",179);
+            gotoxy(47,j);   cprintf("%c",179);
+            gotoxy(58,j); cprintf("%c",179);
+            gotoxy(69,j);   cprintf("%c",179);
+        }
+        gotoxy(2,6); cprintf("ID");
+        gotoxy(13,6); cprintf("NAME");
+        gotoxy(30,6); cprintf("SEX");
+        gotoxy(40,6); cprintf("TOTAL");
+        gotoxy(52,6); cprintf("AVR");
+        gotoxy(62,6); cprintf("RANK");
+        gotoxy(72,6); cprintf("RESULT");
+        SORT_RECORD();
+        return;
+    }
+    TABLE(1,80,5,2*number+7,WHITE);
+    for(i=7;i<2*number+7;i+=2)
+        for(j=2;j<80;j++)
+        {
+            gotoxy(j,i); cprintf("%c",196);
+        }
+    for(j=6;j<2*number+7;j++)
+    {
+        gotoxy(5,j);   cprintf("%c",179);
+        gotoxy(25,j);   cprintf("%c",179);
+        gotoxy(36,j);   cprintf("%c",179);
+        gotoxy(47,j);   cprintf("%c",179);
+        gotoxy(58,j); cprintf("%c",179);
+        gotoxy(69,j);   cprintf("%c",179);
+    }
+    gotoxy(2,6); cprintf("ID");
+    gotoxy(13,6); cprintf("NAME");
+    gotoxy(30,6); cprintf("SEX");
+    gotoxy(40,6); cprintf("TOTAL");
+    gotoxy(52,6); cprintf("AVR");
+    gotoxy(62,6); cprintf("RANK");
+    gotoxy(72,6); cprintf("RESULT");
+    SORT_RECORD();
+}
+void BOX_STU_RECORD()
+{
+    if(number<=8)
+    {
+        int i,j,k=0;
+        TABLE(1,80,5,2*number+7,WHITE);
+        for(i=7;i<2*number+7;i+=2)
+            for(j=2;j<80;j++)
+            {
+                gotoxy(j,i); cprintf("%c",196);
+            }
+        for(j=6;j<2*number+7;j++)
+        {
+            gotoxy(4,j);   cprintf("%c",179);
+            gotoxy(20,j);   cprintf("%c",179);
+            gotoxy(30,j);   cprintf("%c",179);
+            gotoxy(35,j);   cprintf("%c",179);
+            gotoxy(40,j); cprintf("%c",179);
+            gotoxy(45,j);   cprintf("%c",179);
+            gotoxy(50,j);   cprintf("%c",179);
+            gotoxy(55,j);   cprintf("%c",179);
+            gotoxy(60,j);   cprintf("%c",179);
+            gotoxy(65,j); cprintf("%c",179);
+            gotoxy(70,j); cprintf("%c",179);
+            gotoxy(75,j); cprintf("%c",179);
+        }
+        gotoxy(2,6); cprintf("ID");
+        gotoxy(11,6); cprintf("NAME");
+        gotoxy(24,6); cprintf("SEX");
+        gotoxy(31,6); cprintf("MATH");
+        gotoxy(36,6); cprintf("PHY");
+        gotoxy(41,6); cprintf("CHEM");
+        gotoxy(46,6); cprintf("ENG");
+        gotoxy(51,6); cprintf("HIS");
+        gotoxy(56,6); cprintf("BIO");
+        gotoxy(61,6); cprintf("GEO");
+        gotoxy(66,6); cprintf("EAR");
+        gotoxy(71,6); cprintf("PHI");
+        gotoxy(76,6); cprintf("KHM");
+        SORT_RECORD();
+        for(i=0;i<number;i++)
+        {
+            gotoxy(2,8+k); printf("%d",de[i].id);
+            gotoxy(6,8+k); printf("%s",de[i].name);
+            gotoxy(24,8+k); printf("%s",de[i].sex);
+            gotoxy(32,8+k); if(stu[i].math<50) textcolor(RED);   cprintf("%.0f",stu[i].math);textcolor(WHITE);
+            gotoxy(37,8+k); if(stu[i].physic<50) textcolor(RED); cprintf("%.0f",stu[i].physic);textcolor(WHITE);
+            gotoxy(42,8+k); if(stu[i].chemical<50) textcolor(RED); cprintf("%.0f",stu[i].chemical);textcolor(WHITE);
+            gotoxy(47,8+k); if(stu[i].english<50) textcolor(RED); cprintf("%.0f",stu[i].english);textcolor(WHITE);
+            gotoxy(52,8+k); if(stu[i].history<50) textcolor(RED); cprintf("%.0f",stu[i].history);textcolor(WHITE);
+            gotoxy(57,8+k); if(stu[i].biology<50) textcolor(RED); cprintf("%.0f",stu[i].biology);textcolor(WHITE);
+            gotoxy(62,8+k); if(stu[i].geography<50) textcolor(RED); cprintf("%.0f",stu[i].geography);textcolor(WHITE);
+            gotoxy(67,8+k); if(stu[i].earth<50) textcolor(RED); cprintf("%.0f",stu[i].earth); textcolor(WHITE);
+            gotoxy(72,8+k); if(stu[i].philosophy<50) textcolor(RED); cprintf("%.0f",stu[i].philosophy);textcolor(WHITE);
+            gotoxy(77,8+k); if(stu[i].khmer<50) textcolor(RED); cprintf("%.0f",stu[i].khmer);textcolor(WHITE);
+            k+=2;
+        }
+        getch();
+    }
+    if(number>8)
+    {
+        int i,j,k=0,m=0,n=8;
+        while(1)
+        {
+            k=0; textbackground(0);
+            clrscr();
+            TABLE(1,80,5,2*8+7,WHITE);
+            for(i=7;i<2*8+7;i+=2)
+                for(j=2;j<80;j++)
+                {
+                    gotoxy(j,i); cprintf("%c",196);
+                }
+            for(j=6;j<2*8+7;j++)
+            {
+                gotoxy(4,j);   cprintf("%c",179);
+                gotoxy(20,j);   cprintf("%c",179);
+                gotoxy(30,j);   cprintf("%c",179);
+                gotoxy(35,j);   cprintf("%c",179);
+                gotoxy(40,j); cprintf("%c",179);
+                gotoxy(45,j);   cprintf("%c",179);
+                gotoxy(50,j);   cprintf("%c",179);
+                gotoxy(55,j);   cprintf("%c",179);
+                gotoxy(60,j);   cprintf("%c",179);
+                gotoxy(65,j); cprintf("%c",179);
+                gotoxy(70,j); cprintf("%c",179);
+                gotoxy(75,j); cprintf("%c",179);
+            }
+            gotoxy(2,6); cprintf("ID");
+            gotoxy(11,6); cprintf("NAME");
+            gotoxy(24,6); cprintf("SEX");
+            gotoxy(31,6); cprintf("MATH");
+            gotoxy(36,6); cprintf("PHY");
+            gotoxy(41,6); cprintf("CHEM");
+            gotoxy(46,6); cprintf("ENG");
+            gotoxy(51,6); cprintf("HIS");
+            gotoxy(56,6); cprintf("BIO");
+            gotoxy(61,6); cprintf("GEO");
+            gotoxy(66,6); cprintf("EAR");
+            gotoxy(71,6); cprintf("PHI");
+            gotoxy(76,6); cprintf("KHM");
+            SORT_RECORD();
+            i=m;
+            while(i<n)
+            {
+                gotoxy(2,8+k); printf("%d",de[i].id);
+                gotoxy(6,8+k); printf("%s",de[i].name);
+                gotoxy(24,8+k); printf("%s",de[i].sex);
+                gotoxy(32,8+k); if(stu[i].math<50) textcolor(RED);   cprintf("%.0f",stu[i].math);textcolor(WHITE);
+                gotoxy(37,8+k); if(stu[i].physic<50) textcolor(RED); cprintf("%.0f",stu[i].physic);textcolor(WHITE);
+                gotoxy(42,8+k); if(stu[i].chemical<50) textcolor(RED); cprintf("%.0f",stu[i].chemical);textcolor(WHITE);
+                gotoxy(47,8+k); if(stu[i].english<50) textcolor(RED); cprintf("%.0f",stu[i].english);textcolor(WHITE);
+                gotoxy(52,8+k); if(stu[i].history<50) textcolor(RED); cprintf("%.0f",stu[i].history);textcolor(WHITE);
+                gotoxy(57,8+k); if(stu[i].biology<50) textcolor(RED); cprintf("%.0f",stu[i].biology);textcolor(WHITE);
+                gotoxy(62,8+k); if(stu[i].geography<50) textcolor(RED); cprintf("%.0f",stu[i].geography);textcolor(WHITE);
+                gotoxy(67,8+k); if(stu[i].earth<50) textcolor(RED); cprintf("%.0f",stu[i].earth); textcolor(WHITE);
+                gotoxy(72,8+k); if(stu[i].philosophy<50) textcolor(RED); cprintf("%.0f",stu[i].philosophy);textcolor(WHITE);
+                gotoxy(77,8+k); if(stu[i].khmer<50) textcolor(RED); cprintf("%.0f",stu[i].khmer);textcolor(WHITE);
+                k+=2;
+                i++;
+            }
+            ch=getch();
+            if(ch==72)
+            {
+                if(m<=0) continue;
+                m--;
+                n--;
+                continue;
+            }
+            if(ch==80)
+            {
+                if(n>=number) continue;
+                m++;
+                n++;
+            }
+            if(ch==8) break;
+        }
+    }
+}
+void show_stu_record()
+{
+    clrscr();
+    int i,j;
+    TABLE(32,48,1,3,WHITE);
+    gotoxy(33,2); printf("STUDENT RECORD");
+    gotoxy(30,5); printf("NAME    : %s",de[r].name);
+    gotoxy(30,7); printf("SEX     : %s",de[r].sex);
+    gotoxy(30,9); printf("ID      : %d",de[r].id);
+    gotoxy(30,11); printf("TOTAL   : %.2f",stu[r].total);
+    gotoxy(30,13); printf("AVERAGE : %.2f",stu[r].average);
+    gotoxy(30,15); printf("RANK    : %d",stu[r].rank);
+    gotoxy(30,17); printf("RESULT  : %s",stu[r].result);
+    TABLE(5,75,19,23,WHITE);
+    for(j=6;j<74;j++)
+    {
+        gotoxy(j,21); cprintf("%c",196);
+    }
+    for(j=20;j<23;j++)
+    {
+        gotoxy(12,j);   cprintf("%c",179);
+        gotoxy(19,j); cprintf("%c",179);
+        gotoxy(26,j);   cprintf("%c",179);
+        gotoxy(33,j);   cprintf("%c",179);
+        gotoxy(40,j);   cprintf("%c",179);
+        gotoxy(47,j);   cprintf("%c",179);
+        gotoxy(54,j); cprintf("%c",179);
+        gotoxy(61,j); cprintf("%c",179);
+        gotoxy(68,j); cprintf("%c",179);
+    }
+    gotoxy(7,20); cprintf("MATH");
+    gotoxy(14,20); cprintf("PHY");
+    gotoxy(21,20); cprintf("CHEM");
+    gotoxy(28,20); cprintf("KHM");
+    gotoxy(35,20); cprintf("ENG");
+    gotoxy(42,20); cprintf("BIO");
+    gotoxy(49,20); cprintf("PHI");
+    gotoxy(56,20); cprintf("GEO");
+    gotoxy(63,20); cprintf("HIS");
+    gotoxy(70,20); cprintf("EARTH");
+    gotoxy(7,22); if(stu[r].math<50)       textcolor(RED); cprintf("%.0f",stu[r].math); textcolor(WHITE);
+    gotoxy(14,22);if(stu[r].physic<50)     textcolor(RED); cprintf("%.0f",stu[r].physic);textcolor(WHITE);
+    gotoxy(21,22);if(stu[r].chemical<50)   textcolor(RED); cprintf("%.0f",stu[r].chemical);textcolor(WHITE);
+    gotoxy(28,22);if(stu[r].khmer<50)      textcolor(RED); cprintf("%.0f",stu[r].khmer);   textcolor(WHITE);
+    gotoxy(35,22);if(stu[r].english<50)    textcolor(RED); cprintf("%.0f",stu[r].english); textcolor(WHITE);
+    gotoxy(42,22);if(stu[r].biology<50)    textcolor(RED); cprintf("%.0f",stu[r].biology); textcolor(WHITE);
+    gotoxy(49,22);if(stu[r].philosophy<50) textcolor(RED); cprintf("%.0f",stu[r].philosophy); textcolor(WHITE);
+    gotoxy(56,22);if(stu[r].geography<50)  textcolor(RED); cprintf("%.0f",stu[r].geography);  textcolor(WHITE);
+    gotoxy(63,22);if(stu[r].history<50)    textcolor(RED); cprintf("%.0f",stu[r].history);    textcolor(WHITE);
+    gotoxy(70,22);if(stu[r].earth<50)      textcolor(RED); cprintf("%.0f",stu[r].earth);      textcolor(WHITE);
+}
